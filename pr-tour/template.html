@@ -1,228 +1,420 @@
 <title>PR tour</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: verdict card on top, then a two-column tour (step rail + one step at a time), stacking on phones. */
+/* An after-school visual novel: Mochi the cat narrates one chapter (step) at a time.
+   Pink leads, mint means proven, coral means a gap; every colour also has an icon. */
 :root {
-  --bg: #f4f6f8; --surface: #ffffff; --ink: #14181d; --muted: #59626e; --line: #dbe0e6;
-  --accent: #0b6b63; --accent-soft: #e2f1ef;
-  --risky: #b23a12; --risky-soft: #fbe9e2; --logic: #8a5a00; --logic-soft: #f8efd9;
-  --mech: #3f6b34; --mech-soft: #e6f0e1;
-  --add-bg: #e7f6ea; --add-ink: #1d5c2b; --del-bg: #fbe8e8; --del-ink: #8a2121;
-  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --sky-a: #FFE8F1; --sky-b: #EAE6FF; --dot: rgba(255,255,255,.95);
+  --card: #FFFFFF; --card-2: #FFF6FA; --ink: #3A2E4D; --ink-2: #6B5E86; --ink-3: #A79BC0; --line: #F0E2EE;
+  --frame: #F5BED6; --frame-2: #F3D3E3;
+  --pink: #FF5D99; --pink-deep: #D93F7B; --pink-soft: #FFE3EF; --pink-ink: #C2306B; --on-pink: #FFFFFF; --gold: #E8A400;
+  --proof: #14806F; --proof-soft: #D8F5EC; --proof-deep: #0E5E52; --gap: #CF4A22; --gap-soft: #FFE3D6; --gap-deep: #9E3615;
+  --risky: #FF5D99; --logic: #9C86F2; --mechanical: #7CD4B6; --wrap: #FFB13D;
+  --add-bg: #E2F6EC; --add-ink: #17573F; --del-bg: #FFE5EC; --del-ink: #8C2145; --code-bg: #FFFCFD;
+  --cat-fur: #FFFDF8; --cat-line: #3A2E4D; --cat-pink: #FFB3CF; --cat-patch: #F7B267; --sweat: #8FD3FF;
+  --round: "M PLUS Rounded 1c", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --pop: "Mochiy Pop One", var(--round);
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #0e1114; --surface: #161a1f; --ink: #e5e9ee; --muted: #9ba4b0; --line: #283039;
-  --accent: #52c3b6; --accent-soft: #12302d;
-  --risky: #ff8a65; --risky-soft: #3a1d14; --logic: #f0c060; --logic-soft: #33280f;
-  --mech: #9bcf8a; --mech-soft: #1c2d18;
-  --add-bg: #13301c; --add-ink: #a6e3b4; --del-bg: #3a1818; --del-ink: #f3b0b0; color-scheme: dark } }
+  --sky-a: #1A1430; --sky-b: #2B1E47; --dot: rgba(255,255,255,.16);
+  --card: #241B3A; --card-2: #2B2145; --ink: #F6F0FF; --ink-2: #C9BCE6; --ink-3: #8B7DB0; --line: #3A2E58;
+  --frame: #6B4C8F; --frame-2: #3A2A57;
+  --pink: #FF7FB0; --pink-deep: #B8467A; --pink-soft: #46284A; --pink-ink: #FFB3D1; --on-pink: #1A1430; --gold: #FFD36B;
+  --proof: #6EE0C6; --proof-soft: #173A36; --proof-deep: #2E8F7C; --gap: #FF9E7D; --gap-soft: #45261F; --gap-deep: #B0573A;
+  --risky: #FF7FB0; --logic: #A895FF; --mechanical: #6FD6B3; --wrap: #FFC46B;
+  --add-bg: #163A2E; --add-ink: #A9ECCF; --del-bg: #43202F; --del-ink: #FFB5C9; --code-bg: #1E1632;
+  --cat-fur: #FFF4E6; --cat-line: #2A1F40; --cat-pink: #FF9DC2; --cat-patch: #F0A458; --sweat: #7CC8F5; color-scheme: dark } }
 :root[data-theme="dark"] {
-  --bg: #0e1114; --surface: #161a1f; --ink: #e5e9ee; --muted: #9ba4b0; --line: #283039;
-  --accent: #52c3b6; --accent-soft: #12302d;
-  --risky: #ff8a65; --risky-soft: #3a1d14; --logic: #f0c060; --logic-soft: #33280f;
-  --mech: #9bcf8a; --mech-soft: #1c2d18;
-  --add-bg: #13301c; --add-ink: #a6e3b4; --del-bg: #3a1818; --del-ink: #f3b0b0; color-scheme: dark }
+  --sky-a: #1A1430; --sky-b: #2B1E47; --dot: rgba(255,255,255,.16);
+  --card: #241B3A; --card-2: #2B2145; --ink: #F6F0FF; --ink-2: #C9BCE6; --ink-3: #8B7DB0; --line: #3A2E58;
+  --frame: #6B4C8F; --frame-2: #3A2A57;
+  --pink: #FF7FB0; --pink-deep: #B8467A; --pink-soft: #46284A; --pink-ink: #FFB3D1; --on-pink: #1A1430; --gold: #FFD36B;
+  --proof: #6EE0C6; --proof-soft: #173A36; --proof-deep: #2E8F7C; --gap: #FF9E7D; --gap-soft: #45261F; --gap-deep: #B0573A;
+  --risky: #FF7FB0; --logic: #A895FF; --mechanical: #6FD6B3; --wrap: #FFC46B;
+  --add-bg: #163A2E; --add-ink: #A9ECCF; --del-bg: #43202F; --del-ink: #FFB5C9; --code-bg: #1E1632;
+  --cat-fur: #FFF4E6; --cat-line: #2A1F40; --cat-pink: #FF9DC2; --cat-patch: #F0A458; --sweat: #7CC8F5; color-scheme: dark }
 
 * { box-sizing: border-box }
-body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--sans); }
-.page { max-width: 1200px; margin: 0 auto; padding-block: 28px 64px;
+body { margin: 0; color: var(--ink); font: 15px/1.6 var(--round);
+  background: radial-gradient(var(--dot) 1.6px, transparent 1.9px) 0 0 / 26px 26px, linear-gradient(160deg, var(--sky-a), var(--sky-b)) fixed;
+  background-color: var(--sky-a); }
+.page { max-width: 1280px; margin: 0 auto; padding-block: 16px 72px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: grid; gap: 24px; }
-a { color: var(--accent) }
-a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
-code, .mono { font-family: var(--mono); font-size: .9em }
-h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.25 }
-h1 { font-size: clamp(22px, 3vw, 30px); font-weight: 600 }
-h2 { font-size: 20px; font-weight: 600 }
-h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted) }
-ul { margin: 0; padding-left: 20px; display: grid; gap: 6px }
-.eyebrow { font: 500 12px var(--mono); color: var(--muted); letter-spacing: .02em }
-.meta { display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--muted); font-size: 13px }
+  display: grid; gap: 32px }
+a { color: var(--pink-ink); font-weight: 700 }
+a:hover { color: var(--ink) }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px }
+code, .mono { font-family: var(--mono); font-size: .88em }
+h1, h2 { margin: 0; text-wrap: balance; font-family: var(--pop); font-weight: 400 }
+p { margin: 0 }
+ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px }
+.win { background: var(--card); border: 2.5px solid var(--frame); border-radius: 22px; box-shadow: 0 6px 0 var(--frame-2) }
+.lab { justify-self: start; display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; border-radius: 999px;
+  background: var(--pink-soft); color: var(--pink-ink); font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase }
+.ico { width: 22px; height: 22px; flex: none; border-radius: 50%; display: inline-grid; place-items: center;
+  color: var(--card); font-size: 12px; font-weight: 800; line-height: 1 }
+.stars { color: var(--gold); letter-spacing: .04em }
 
-.head { display: grid; gap: 10px }
-.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px;
-  display: grid; gap: 16px; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) }
-.verdict > * { min-width: 0 }
-.stamp { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; padding: 4px 10px;
-  border-radius: 6px; width: fit-content }
-.stamp.ok { background: var(--mech-soft); color: var(--mech) }
-.stamp.warn { background: var(--logic-soft); color: var(--logic) }
-.stamp.block { background: var(--risky-soft); color: var(--risky) }
-.spec { display: grid; gap: 10px; font-size: 14px }
-.spec dl { margin: 0; display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 6px 12px }
-.spec dt { font: 500 12px var(--mono); color: var(--muted); padding-top: 2px }
-.spec dd { margin: 0 }
-.spec dd ul { padding-left: 16px; gap: 2px }
+/* Top bar */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px }
+.brand { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; min-width: 0 }
+.logo { font-family: var(--pop); font-size: 20px; color: var(--pink) }
+.logo span { color: var(--gold) }
+.meta { font: 12.5px var(--mono); color: var(--ink-2); overflow-wrap: anywhere }
+.hearts { display: flex; align-items: center; gap: 10px; padding: 6px 14px; border-radius: 999px; background: var(--card); border: 2px solid var(--frame) }
+.hearts i { font-style: normal; font-size: 17px; line-height: 1; color: var(--ink-3) }
+.hearts i.on { color: var(--pink) }
+.hearts i.cur { color: var(--pink); display: inline-block; transform: scale(1.25) }
+.hearts b { font-size: 13px; color: var(--ink-2) }
 
-.budget { display: grid; gap: 8px }
-.bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--line) }
-.bar span { display: block }
-.legend { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums }
-.legend b { color: var(--ink); font-weight: 600 }
-.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px }
+/* Episode card */
+.hero { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 28px; align-items: start }
+.hero > * { min-width: 0 }
+.ep { display: grid; gap: 16px }
+.ep .title { font-family: var(--pop); font-size: 22px; line-height: 1.35; color: var(--ink-2) }
+.ribbon { justify-self: start; margin: 2px 0 6px; font-size: clamp(26px, 3.4vw, 40px); line-height: 1.15; padding: 10px 26px 12px; border-radius: 20px;
+  background: var(--pink); color: var(--on-pink); box-shadow: 0 6px 0 var(--pink-deep); transform: rotate(-1.2deg) }
+.ribbon.ok { background: var(--proof); box-shadow: 0 6px 0 var(--proof-deep); color: var(--card) }
+.ribbon.block { background: var(--gap); box-shadow: 0 6px 0 var(--gap-deep); color: var(--card) }
+.ep .summary { max-width: 62ch; font-size: 16.5px; color: var(--ink-2) }
+.gems { display: flex; flex-wrap: wrap; gap: 10px }
+.gem { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 7px; border-radius: 999px; font-size: 14px; font-weight: 800 }
+.gem.proof { background: var(--proof-soft); color: var(--proof) } .gem.proof .ico { background: var(--proof) }
+.gem.gap { background: var(--gap-soft); color: var(--gap) } .gem.gap .ico { background: var(--gap) }
+.gem.ask { background: var(--card); border: 2px solid var(--pink); color: var(--pink-ink) } .gem.ask .ico { background: var(--pink); color: var(--on-pink) }
+.facts { font-size: 13px; font-weight: 700; color: var(--ink-3) }
+.quest { padding: 22px 24px; display: grid; gap: 12px }
+.quest .hd { display: flex; justify-content: space-between; align-items: center; gap: 12px }
+.quest .hd b { font-family: var(--pop); font-weight: 400; font-size: 17px }
+.quest .row { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 12px; align-items: baseline; padding-top: 10px; border-top: 2px dotted var(--line); font-size: 14px }
+.quest .row > b { font-size: 12.5px; font-weight: 800 }
+.quest .row ul { gap: 4px }
+.q-asked { color: var(--proof) } .q-extra { color: var(--logic) } .q-missing { color: var(--gap) } .q-none { color: var(--ink-3) }
 
-.tour { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 20px; align-items: start }
-.rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); display: grid; gap: 4px }
-.rail-head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px 6px; font-size: 13px; color: var(--muted) }
-.stepbtn { all: unset; cursor: pointer; display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; align-items: start;
-  padding: 9px 10px; border-radius: 8px; font-size: 14px; line-height: 1.35 }
-.stepbtn:hover { background: var(--surface) }
-.stepbtn[aria-current="step"] { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line) }
-.stepbtn:focus-visible { outline: 2px solid var(--accent) }
-.stepbtn .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid currentColor; margin-top: 1px; display: grid; place-items: center; font-size: 11px; font-weight: 700 }
-.stepbtn.done .dot { background: currentColor }
-.stepbtn.done .dot::after { content: "✓"; color: var(--surface) }
-.stepbtn.done .t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line) }
-.tier-risky { color: var(--risky) } .tier-logic { color: var(--logic) } .tier-mechanical { color: var(--mech) } .tier-wrap { color: var(--accent) }
+/* Route map */
+.route { display: grid; gap: 12px }
+.route .hd { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 24px }
+.route h2 { font-size: 19px }
+.route h2 small { font: 700 14px var(--round); color: var(--ink-2) }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; font-weight: 700; color: var(--ink-2) }
+.legend span { display: inline-flex; align-items: center; gap: 6px }
+.sw { width: 14px; height: 14px; border-radius: 4px; flex: none }
+.blocks, .blabels { display: flex; gap: 6px }
+.blocks { height: 52px }
+.block { min-width: 18px; border: 0; border-radius: 14px; padding: 0 10px; cursor: pointer; overflow: hidden; white-space: nowrap; text-align: left;
+  font: 800 13px var(--round); color: #fff; box-shadow: 0 4px 0 rgba(58, 46, 77, .14) }
+.block[aria-current="step"] { outline: 3px solid var(--ink); outline-offset: 3px }
+.blabels span { min-width: 18px; font: 11.5px var(--mono); color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.blabels i { font-style: normal; color: var(--ink-3) }
+.t-risky { background: var(--risky) } .t-logic { background: var(--logic) } .t-wrap { background: var(--wrap) }
+.t-mechanical { background: repeating-linear-gradient(135deg, var(--mechanical) 0 8px, var(--card) 8px 14px); box-shadow: inset 0 0 0 2.5px var(--mechanical) }
+.block.t-mechanical, .ch .n.t-mechanical, .tagpill.t-mechanical { text-shadow: 0 0 3px var(--card), 0 0 3px var(--card), 0 0 3px var(--card) }
+.block.t-mechanical { color: var(--ink); box-shadow: inset 0 0 0 2.5px var(--mechanical), 0 4px 0 rgba(58, 46, 77, .14) }
+.sw.t-mechanical { background: repeating-linear-gradient(135deg, var(--mechanical) 0 3px, transparent 3px 6px); box-shadow: inset 0 0 0 2px var(--mechanical) }
 
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 24px; display: grid; gap: 22px; min-width: 0 }
-.panel > section { display: grid; gap: 10px; min-width: 0 }
-.chip { display: inline-block; font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; padding: 3px 8px; border-radius: 4px }
-.chip.risky { background: var(--risky-soft); color: var(--risky) }
-.chip.logic { background: var(--logic-soft); color: var(--logic) }
-.chip.mechanical { background: var(--mech-soft); color: var(--mech) }
-.chip.wrap { background: var(--accent-soft); color: var(--accent) }
-.stephead { display: grid; gap: 8px }
-.stephead .row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; font-size: 13px; color: var(--muted) }
+/* Chapter select + stage */
+.tour { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; align-items: start }
+.rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); padding: 14px; display: grid; gap: 4px }
+.rail .hd { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 8px 8px }
+.rail .hd b { font-family: var(--pop); font-weight: 400; font-size: 15px }
+.rail .hd span { font-size: 12px; font-weight: 700; color: var(--ink-3) }
+.ch { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: start;
+  padding: 10px; min-height: 48px; border-radius: 16px; border: 2px solid transparent }
+.ch:hover { background: var(--card-2) }
+.ch[aria-current="step"] { background: var(--pink-soft); border-color: var(--pink) }
+.ch:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px }
+.ch .n { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; font: 13px var(--pop); color: #fff }
+.ch .n.t-mechanical { color: var(--ink) }
+.ch .t { font-size: 14px; line-height: 1.4; font-weight: 700 }
+.ch[aria-current="step"] .t { font-weight: 800 }
+.ch .s { display: block; font-size: 12px; font-weight: 700; color: var(--ink-2) }
+.ch.done:not([aria-current]) .n { opacity: .45 }
+.ch.done:not([aria-current]) .t { color: var(--ink-3) }
+
+.stage { padding: 28px 32px; display: grid; gap: 26px; min-width: 0 }
+.stage > section { display: grid; gap: 10px; min-width: 0 }
+.sh { display: grid; gap: 10px }
+.sh .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 13px; font-weight: 800; color: var(--ink-2) }
+.tagpill { padding: 2px 10px; border-radius: 999px; font-size: 11px; letter-spacing: .08em; color: #fff }
+.tagpill.t-mechanical { color: var(--ink) }
+.sh h2 { font-size: 28px; line-height: 1.3 }
 .files { display: flex; flex-wrap: wrap; gap: 6px }
-.files a { font: 12px var(--mono); text-decoration: none; padding: 2px 8px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); overflow-wrap: anywhere }
-.files a:hover { border-color: var(--accent) }
-.files .n { color: var(--muted) }
-.prose { max-width: 70ch }
+.files a { font: 400 12px var(--mono); text-decoration: none; padding: 4px 10px; background: var(--card-2); border: 2px solid var(--line); border-radius: 999px; color: var(--ink); overflow-wrap: anywhere }
+.files a:hover { border-color: var(--pink) }
+.plus { color: var(--proof) } .minus { color: var(--gap) }
 
-.ev { list-style: none; padding: 0; gap: 8px }
-.ev li { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 12px; align-items: baseline; font-size: 14px }
-.tag { font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: .04em; padding: 2px 6px; border-radius: 4px; text-align: center }
-.tag.ran, .tag.killed { background: var(--mech-soft); color: var(--mech) }
-.tag.survived { background: var(--risky-soft); color: var(--risky) }
-.tag.claimed { background: var(--logic-soft); color: var(--logic) }
-.tag.read { background: var(--accent-soft); color: var(--accent) }
-.qs { list-style: none; padding: 0; gap: 8px }
-.qs li { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px }
-.qs li.blocking { border-color: var(--risky) }
-.qs .who { font: 500 12px var(--mono); color: var(--muted); display: block; margin-top: 4px }
+.scene { display: grid; grid-template-columns: 180px minmax(0, 1fr); align-items: end; gap: 6px }
+.cat { position: relative; width: 180px; height: 180px }
+.cat svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible }
+.dialog { position: relative; background: var(--card); border: 2.5px solid var(--frame); border-radius: 24px; padding: 30px 26px 24px; box-shadow: 0 6px 0 var(--frame-2) }
+.dialog::before { content: ""; position: absolute; left: -13px; bottom: 44px; width: 22px; height: 22px; background: var(--card);
+  border-left: 2.5px solid var(--frame); border-bottom: 2.5px solid var(--frame); transform: rotate(45deg) }
+.dialog .name { position: absolute; top: -17px; left: 22px; padding: 4px 16px 5px; border-radius: 999px; background: var(--pink); color: var(--on-pink);
+  font: 15px var(--pop); box-shadow: 0 3px 0 var(--pink-deep) }
+.dialog .say { margin-bottom: 8px; font-size: 18px; font-weight: 800; line-height: 1.5 }
+.dialog .why { max-width: 72ch; font-size: 15.5px; color: var(--ink-2) }
+.dialog .more { position: absolute; right: 20px; bottom: 10px; color: var(--pink); font-size: 13px }
 
-.hunk { border: 1px solid var(--line); border-radius: 8px; overflow: hidden }
-.hunk summary { cursor: pointer; padding: 8px 12px; font: 12px var(--mono); display: flex; justify-content: space-between; gap: 12px; background: var(--bg) }
-.hunk summary span { overflow-wrap: anywhere }
-.hunk .note { padding: 8px 12px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line) }
-.code { overflow-x: auto; font: 12.5px/1.5 var(--mono); border-top: 1px solid var(--line) }
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 400px); gap: 28px }
+.split > div { display: grid; gap: 22px; align-content: start; min-width: 0 }
+.split section { display: grid; gap: 10px }
+.look li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 8px }
+.look li::before { content: "♪"; color: var(--pink) }
+.think li { padding: 16px 18px; background: var(--card-2); border: 2.5px dashed var(--logic); border-radius: 26px; font-weight: 500 }
+.ev li { display: grid; gap: 6px; padding: 12px 14px; border-radius: 16px; font-size: 14px; border: 2px solid transparent }
+.ev .k { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800 }
+.ev .ran, .ev .killed { background: var(--proof-soft) }
+.ev .ran .k, .ev .killed .k { color: var(--proof) } .ev .ran .ico, .ev .killed .ico { background: var(--proof) }
+.ev .survived { background: var(--gap-soft); border-color: var(--gap) }
+.ev .survived .k, .ev .claimed .k { color: var(--gap) } .ev .survived .ico, .ev .claimed .ico { background: var(--gap) }
+.ev .claimed { border-style: dashed; border-color: var(--gap) }
+.ev .read { background: var(--card-2); border-color: var(--line) }
+.ev .read .k { color: var(--ink-2) } .ev .read .ico { background: var(--ink-3) }
+
+.hunk { border: 2.5px solid var(--frame); border-radius: 18px; overflow: hidden; background: var(--code-bg) }
+.hunk + .hunk { margin-top: 12px }
+.hunk summary { cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 10px 14px; background: var(--card-2) }
+.hunk summary::-webkit-details-marker { display: none }
+.hunk[open] summary { border-bottom: 2px solid var(--line) }
+.hunk summary > span { display: inline-flex; align-items: center; gap: 10px; min-width: 0; font: 12px var(--mono); overflow-wrap: anywhere }
+.lights { display: inline-flex; gap: 5px; flex: none }
+.lights i { width: 11px; height: 11px; border-radius: 50% }
+.hunk .note { padding: 8px 14px; font-size: 13.5px; font-weight: 500; color: var(--ink-2); border-bottom: 2px dotted var(--line) }
+.code { overflow-x: auto; font: 12.5px/1.7 var(--mono); padding-block: 6px }
 .code table { border-collapse: collapse; min-width: 100% }
-.code td { padding: 0 10px; white-space: pre; vertical-align: top }
-.code td.ln { color: var(--muted); text-align: right; user-select: none; width: 1%; font-variant-numeric: tabular-nums }
+.code td { padding: 0 12px; white-space: pre; vertical-align: top }
+.code td.ln { color: var(--ink-3); text-align: right; user-select: none; width: 1%; font-variant-numeric: tabular-nums }
 .code tr.add { background: var(--add-bg) } .code tr.add td.c { color: var(--add-ink) }
 .code tr.del { background: var(--del-bg) } .code tr.del td.c { color: var(--del-ink) }
 
-.nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 18px }
-.nav .keys { font-size: 12px; color: var(--muted) }
-.nav .keys kbd { font: 11px var(--mono); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px }
-.btns { display: flex; gap: 8px; flex-wrap: wrap }
-button.b { font: 500 14px var(--sans); padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer }
-button.b.primary { background: var(--accent); border-color: var(--accent); color: var(--surface) }
-button.b:disabled { opacity: .4; cursor: default }
+.boss { padding: 16px 18px; border-radius: 18px; display: grid; gap: 6px; font-size: 16px }
+.boss .who { font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase }
+.boss.blocking { background: var(--pink-soft); border: 2.5px solid var(--pink); box-shadow: 0 4px 0 var(--pink-deep) }
+.boss.blocking .who { color: var(--pink-ink) }
+.boss.side { border: 2.5px dashed var(--logic) }
+.boss.side .who { color: var(--ink-2) }
+.escaped li { display: flex; gap: 10px; align-items: center; padding: 14px 16px; border-radius: 16px; background: var(--gap-soft) }
+.escaped .ico { background: var(--gap) }
+.method { max-width: 70ch; color: var(--ink-2) }
 
-@media (max-width: 860px) {
-  .verdict { grid-template-columns: minmax(0, 1fr) }
-  .tour { grid-template-columns: minmax(0, 1fr) }
-  .rail { position: static }
-  .panel { padding: 18px }
-  .ev li { grid-template-columns: minmax(0, 1fr); gap: 4px }
-  .tag { justify-self: start }
+.nav { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding-top: 20px; border-top: 2px dotted var(--line) }
+.keys { font-size: 13px; font-weight: 700; color: var(--ink-3) }
+.keys kbd { font: 600 11px var(--mono); color: var(--ink-2); background: var(--card-2); border: 2px solid var(--line); border-radius: 6px; padding: 0 6px }
+.btns { display: flex; flex-wrap: wrap; gap: 10px }
+.choice { min-height: 48px; padding: 0 22px; border-radius: 999px; border: 2.5px solid var(--frame); background: var(--card); color: var(--ink);
+  font: 700 15px var(--round); box-shadow: 0 4px 0 var(--frame-2); cursor: pointer }
+.choice.go { background: var(--pink); border-color: var(--pink-deep); color: var(--on-pink); box-shadow: 0 4px 0 var(--pink-deep) }
+.choice:disabled { opacity: .45; cursor: default }
+.choice:not(:disabled):active { transform: translateY(3px); box-shadow: 0 1px 0 var(--frame-2) }
+
+@media (prefers-reduced-motion: no-preference) {
+  .cat { animation: bob 2.8s ease-in-out infinite }
+  .dialog .more { animation: blink 1.1s steps(2, start) infinite }
+  .ch, .choice, .block { transition: background .15s, transform .1s }
 }
-@media (prefers-reduced-motion: no-preference) { .stepbtn, button.b { transition: background .15s } }
+@keyframes bob { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
+@keyframes blink { to { visibility: hidden } }
+@media (max-width: 980px) {
+  .hero, .tour, .split { grid-template-columns: minmax(0, 1fr) }
+  .rail { position: static }
+  .blabels { display: none }
+}
+@media (max-width: 560px) {
+  .stage { padding: 20px 16px }
+  .scene { grid-template-columns: minmax(0, 1fr) }
+  .cat { width: 112px; height: 112px; margin: 0 0 -10px 12px; z-index: 1 }
+  .dialog::before { display: none }
+  .keys { display: none }
+  .quest .row { grid-template-columns: minmax(0, 1fr); gap: 2px }
+}
 </style>
 
 <div class="page">
-  <header class="head" id="head"></header>
-  <section class="verdict" id="verdict" aria-label="Verdict"></section>
-  <section class="budget" id="budget" aria-label="Reading budget"></section>
+  <header class="top" id="top"></header>
+  <section class="hero" id="hero" aria-label="Verdict"></section>
+  <section class="route" id="route" aria-label="Route map"></section>
   <div class="tour">
-    <nav class="rail" id="rail" aria-label="Tour steps"></nav>
-    <article class="panel" id="panel" aria-live="polite"></article>
+    <nav class="rail win" id="rail" aria-label="Chapters"></nav>
+    <article class="stage win" id="stage" aria-live="polite"></article>
   </div>
 </div>
 
 <script>
 const TOUR = /*TOUR_DATA*/null;
-const TIER = { risky: "Read closely", logic: "Skim", mechanical: "Safe to skip", wrap: "Wrap-up" };
-const EV = { ran: "Ran", killed: "Mutant caught", survived: "Mutant survived", claimed: "Author claims", read: "Read" };
+const TIER = {
+  risky: { label: "Boss · read closely", stars: "★★★", tag: "BOSS", say: "Boss fight! This is where it can really break, so read it closely." },
+  logic: { label: "Normal · skim", stars: "★★", tag: "NORMAL", say: "A normal stage. Skim the code, then check my receipts." },
+  mechanical: { label: "Easy · safe to skip", stars: "★", tag: "EASY", say: "An easy one. Safe to skip, and here's why." },
+  wrap: { label: "Ending", stars: "♥", tag: "END" }
+};
+const EV = {
+  ran: ["✓", "Proven · ran"], killed: ["✦", "Mutant caught!"], survived: ["!", "Mutant escaped!"],
+  claimed: ["?", "Hearsay · not rerun"], read: ["◎", "Read by hand"]
+};
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 // Inline markup in tour text: `code` only.
 const md = (s) => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>");
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const pr = TOUR.pr;
 const blob = (path, a, b) => `https://github.com/${pr.repo}/blob/${pr.head}/${path}` + (a ? `#L${a}` + (b && b !== a ? `-L${b}` : "") : "");
-const steps = [...TOUR.steps, { id: "wrap", tier: "wrap", title: "Questions and verdict" }];
+const steps = [...TOUR.steps, { id: "wrap", tier: "wrap", title: "Route clear! Questions and verdict" }];
 const storeKey = `pr-tour:${pr.repo}#${pr.number}@${pr.head}`;
 let done = new Set();
 try { done = new Set(JSON.parse(localStorage.getItem(storeKey) || "[]")); } catch {}
 const save = () => { try { localStorage.setItem(storeKey, JSON.stringify([...done])); } catch {} };
 
-document.getElementById("head").innerHTML = `
-  <div class="eyebrow">PR tour · ${esc(pr.repo)} <a href="${esc(pr.url)}">#${pr.number}</a></div>
-  <h1>${md(pr.title)}</h1>
-  <div class="meta"><span>${esc(pr.author)}</span><span class="mono">${esc(pr.base)} ← ${esc(pr.branch)}</span>
-    <span class="mono">head ${esc(pr.head.slice(0, 8))}</span><span>${pr.files} files · +${pr.additions} −${pr.deletions}</span>
-    <span>toured ${esc(TOUR.generatedAt)}</span></div>`;
+const kinds = TOUR.steps.flatMap((s) => (s.evidence || []).map((e) => e.kind));
+const count = (k) => kinds.filter((x) => x === k).length;
+const blocking = TOUR.questions.filter((q) => q.blocking);
+
+// Mochi's face follows the evidence: an escaped mutant worries her, a caught one pleases her.
+function moodOf(s) {
+  if (s.tier === "wrap") return "happy";
+  const ks = (s.evidence || []).map((e) => e.kind);
+  if (ks.includes("survived")) return "worried";
+  if (ks.includes("killed") || ks.includes("ran")) return "happy";
+  if (ks.includes("claimed")) return "thinking";
+  return "calm";
+}
+const EYE = (x) => `<circle cx="${x}" cy="96" r="9" fill="var(--cat-line)"/><circle cx="${x + 3.5}" cy="92" r="3.2" fill="#fff"/>`;
+const FACE = {
+  happy: `<path d="M62 98 Q72 85 82 98 M118 98 Q128 85 138 98" stroke-width="5"/><path d="M86 116 Q93 126 100 116 Q107 126 114 116" stroke-width="3.5"/>
+    <path d="M182 26 L185 36 L195 39 L185 42 L182 52 L179 42 L169 39 L179 36 Z" fill="var(--gold)" stroke-width="2.5"/>
+    <path d="M18 34 L20 40 L26 42 L20 44 L18 50 L16 44 L10 42 L16 40 Z" fill="var(--gold)" stroke-width="2"/>`,
+  worried: `${EYE(72)}${EYE(128)}<path d="M58 82 L82 76 M118 76 L142 82" stroke-width="4"/><path d="M86 122 q3.5 -5 7 0 t7 0 t7 0 t7 0" stroke-width="3.5"/>
+    <path d="M166 46 Q156 62 166 68 Q176 62 166 46 Z" fill="var(--sweat)" stroke-width="2.5"/>`,
+  thinking: `<path d="M62 96 L82 96" stroke-width="5"/>${EYE(128)}<path d="M93 120 Q100 115 107 120" stroke-width="3.5"/>
+    <text x="170" y="40" fill="var(--pink)" stroke="none" style="font: 34px var(--pop)">?</text>`,
+  calm: `${EYE(72)}${EYE(128)}<path d="M88 116 Q94 123 100 116 Q106 123 112 116" stroke-width="3.5"/>`
+};
+const MOOD_LABEL = { happy: "happy", worried: "worried", thinking: "thinking", calm: "calm" };
+const cat = (mood) => `<div class="cat" role="img" aria-label="Mochi the cat, ${MOOD_LABEL[mood]}">
+  <svg viewBox="0 0 200 200" aria-hidden="true" stroke="var(--cat-line)" stroke-linecap="round" stroke-linejoin="round">
+    <defs><clipPath id="mochi-head"><ellipse cx="100" cy="98" rx="76" ry="62"/></clipPath></defs>
+    <path d="M150 170 C192 166 194 120 170 110" fill="none" stroke-width="15"/>
+    <path d="M150 170 C192 166 194 120 170 110" fill="none" stroke="var(--cat-fur)" stroke-width="7"/>
+    <ellipse cx="100" cy="166" rx="56" ry="30" fill="var(--cat-fur)" stroke-width="4"/>
+    <ellipse cx="80" cy="190" rx="13" ry="9" fill="var(--cat-fur)" stroke-width="3.5"/>
+    <ellipse cx="120" cy="190" rx="13" ry="9" fill="var(--cat-fur)" stroke-width="3.5"/>
+    <path d="M40 72 L34 18 Q36 13 41 16 L84 46 Z M160 72 L166 18 Q164 13 159 16 L116 46 Z" fill="var(--cat-fur)" stroke-width="4"/>
+    <path d="M47 60 L43 30 L70 48 Z M153 60 L157 30 L130 48 Z" fill="var(--cat-pink)" stroke="none"/>
+    <ellipse cx="100" cy="98" rx="76" ry="62" fill="var(--cat-fur)" stroke="none"/>
+    <path d="M108 28 C150 24 186 58 176 96 C150 86 122 72 108 28 Z" fill="var(--cat-patch)" stroke="none" clip-path="url(#mochi-head)"/>
+    <ellipse cx="100" cy="98" rx="76" ry="62" fill="none" stroke-width="4"/>
+    <path d="M52 40 L34 29 L36 53 Z M52 40 L70 29 L68 53 Z" fill="var(--pink)" stroke-width="3"/>
+    <circle cx="52" cy="41" r="6" fill="var(--pink)" stroke-width="3"/>
+    <ellipse cx="60" cy="118" rx="12" ry="7" fill="var(--cat-pink)" stroke="none" opacity=".85"/>
+    <ellipse cx="140" cy="118" rx="12" ry="7" fill="var(--cat-pink)" stroke="none" opacity=".85"/>
+    <path d="M24 104 L44 108 M24 116 L44 114 M176 104 L156 108 M176 116 L156 114" stroke-width="3"/>
+    <path d="M95 106 L105 106 L100 112 Z" fill="var(--cat-pink)" stroke-width="2.5"/>
+  </svg>
+  <svg viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="var(--cat-line)" stroke-linecap="round" stroke-linejoin="round">${FACE[mood]}</svg>
+</div>`;
+
+document.getElementById("top").innerHTML = `
+  <div class="brand"><span class="logo">pr-tour <span>✿</span></span>
+    <span class="meta">${esc(pr.repo)} <a href="${esc(pr.url)}">#${pr.number}</a> · ${esc(pr.base)} ← ${esc(pr.branch)} · head ${esc(pr.head.slice(0, 8))}</span></div>
+  <div class="hearts" id="hearts"></div>`;
 
 const v = TOUR.verdict, sp = TOUR.spec;
-const list = (xs) => xs?.length ? `<ul>${xs.map((x) => `<li>${md(x)}</li>`).join("")}</ul>` : `<span style="color:var(--muted)">None</span>`;
-document.getElementById("verdict").innerHTML = `
-  <div style="display:grid;gap:12px;align-content:start">
-    <span class="stamp ${esc(v.tone)}">${esc(v.label)}</span>
-    <p class="prose" style="margin:0">${md(v.summary)}</p>
+const gems = [
+  count("killed") && `<span class="gem proof"><i class="ico">✦</i>${plural(count("killed"), "mutant caught", "mutants caught")}</span>`,
+  count("survived") && `<span class="gem gap"><i class="ico">!</i>${plural(count("survived"), "mutant escaped", "mutants escaped")}</span>`,
+  blocking.length && `<span class="gem ask"><i class="ico">?</i>${plural(blocking.length, "question blocks", "questions block")} merge</span>`
+].filter(Boolean).join("");
+const questRow = (cls, label, xs) => `<div class="row"><b class="${xs?.length ? cls : "q-none"}">${label}</b>${
+  xs?.length ? `<ul>${xs.map((x) => `<li>${md(x)}</li>`).join("")}</ul>` : `<span class="q-none">Nothing</span>`}</div>`;
+document.getElementById("hero").innerHTML = `
+  <div class="ep">
+    <span class="lab">✦ Today's episode · #${pr.number}</span>
+    <div class="title">${md(pr.title)}</div>
+    <h1 class="ribbon ${esc(v.tone)}">${md(v.label)}</h1>
+    <p class="summary">${md(v.summary)}</p>
+    ${gems ? `<div class="gems">${gems}</div>` : ""}
+    <div class="facts">${esc(pr.author)} · ${pr.files} files · +${pr.additions} −${pr.deletions} · toured ${esc(TOUR.generatedAt)}</div>
   </div>
-  <div class="spec"><h3>Against <a href="${esc(sp.ticketUrl)}">${esc(sp.ticket)}</a></h3>
-    <dl><dt>asked</dt><dd>${list(sp.asked)}</dd><dt>extra</dt><dd>${list(sp.extra)}</dd><dt>missing</dt><dd>${list(sp.missing)}</dd></dl></div>`;
+  <div class="quest win">
+    <div class="hd"><b>Quest log</b><a class="mono" href="${esc(sp.ticketUrl)}">${esc(sp.ticket)} ↗</a></div>
+    ${questRow("q-asked", "✓ Asked", sp.asked)}${questRow("q-extra", "+ Extra", sp.extra)}${questRow("q-missing", "✗ Missing", sp.missing)}
+  </div>`;
 
-const bud = { risky: 0, logic: 0, mechanical: 0 };
-TOUR.steps.forEach((s) => (s.files || []).forEach((f) => (bud[s.tier] += f.add + f.del)));
-const total = bud.risky + bud.logic + bud.mechanical;
-document.getElementById("budget").innerHTML = `
-  <div class="bar" role="img" aria-label="Changed lines by how closely to read them">${["risky", "logic", "mechanical"].map((t) =>
-    `<span style="width:${(100 * bud[t]) / total}%;background:var(--${t === "mechanical" ? "mech" : t})"></span>`).join("")}</div>
-  <div class="legend">${["risky", "logic", "mechanical"].map((t) =>
-    `<span><i class="sw" style="background:var(--${t === "mechanical" ? "mech" : t})"></i>${TIER[t]} <b>${bud[t]}</b> lines</span>`).join("")}
-    <span>of ${total} changed</span></div>`;
+// One block per changed file, sized by changed lines, coloured by the tier of the first step that lists it.
+const fileMap = [];
+TOUR.steps.forEach((s, i) => (s.files || []).forEach((f) => {
+  if (!fileMap.some((m) => m.path === f.path)) fileMap.push({ path: f.path, lines: f.add + f.del, tier: s.tier, step: i });
+}));
+const budget = (t) => fileMap.filter((f) => f.tier === t).reduce((n, f) => n + f.lines, 0);
+const short = (p) => p.split("/").pop();
+function renderRoute() {
+  const legend = ["risky", "logic", "mechanical"].filter(budget).map((t) =>
+    `<span><i class="sw t-${t}"></i><span class="stars">${TIER[t].stars}</span> ${TIER[t].label} · ${plural(budget(t), "line", "lines")}</span>`).join("");
+  document.getElementById("route").innerHTML = `
+    <div class="hd"><h2>Route map <small>· where to spend your attention</small></h2><div class="legend">${legend}</div></div>
+    <div class="blocks">${fileMap.map((f) => `<button class="block t-${f.tier}" data-i="${f.step}" style="flex:${f.lines || 1} 1 0"
+      ${f.step === cur ? 'aria-current="step"' : ""} aria-label="${esc(f.path)}, ${f.lines} lines, ${TIER[f.tier].label}">${TIER[f.tier].stars}</button>`).join("")}</div>
+    <div class="blabels">${fileMap.map((f) => `<span style="flex:${f.lines || 1} 1 0" title="${esc(f.path)}">${esc(short(f.path))} <i>${f.lines}</i></span>`).join("")}</div>`;
+}
 
 let cur = 0;
 function renderRail() {
-  document.getElementById("rail").innerHTML = `<div class="rail-head"><span>${steps.length} steps</span><span>${done.size}/${steps.length} reviewed</span></div>` +
-    steps.map((s, i) => `<button class="stepbtn tier-${s.tier} ${done.has(s.id) ? "done" : ""}" data-i="${i}" ${i === cur ? 'aria-current="step"' : ""}>
-      <span class="dot"></span><span class="t" style="color:var(--ink)">${md(s.title)}</span></button>`).join("");
+  document.getElementById("hearts").innerHTML = steps.map((s, i) =>
+    `<i class="${done.has(s.id) ? "on" : ""} ${i === cur ? "cur" : ""}" aria-hidden="true">${done.has(s.id) ? "♥" : "♡"}</i>`).join("") +
+    `<b>${done.size} / ${steps.length} reviewed</b>`;
+  document.getElementById("rail").innerHTML = `<div class="hd"><b>Chapter select</b><span>${steps.length} chapters</span></div>` +
+    steps.map((s, i) => `<button class="ch ${done.has(s.id) ? "done" : ""}" data-i="${i}" ${i === cur ? 'aria-current="step"' : ""}>
+      <span class="n t-${s.tier}">${String(i + 1).padStart(2, "0")}</span>
+      <span><span class="t">${md(s.title)}</span><span class="s"><span class="stars">${TIER[s.tier].stars}</span> ${TIER[s.tier].label}${done.has(s.id) ? " · ♥ done" : ""}</span></span></button>`).join("");
 }
 function hunkHtml(h, tier) {
   const rows = h.lines.map((l) => `<tr class="${l.k === "+" ? "add" : l.k === "-" ? "del" : ""}"><td class="ln">${l.n ?? ""}</td><td class="c">${esc(l.k === " " ? " " : l.k)}${esc(l.t)}</td></tr>`).join("");
-  return `<details class="hunk" ${tier === "risky" || h.open ? "open" : ""}><summary><span>${esc(h.file)}:${h.start}–${h.end}</span><a href="${blob(h.file, h.start, h.end)}">GitHub ↗</a></summary>
+  return `<details class="hunk" ${tier === "risky" || h.open ? "open" : ""}>
+    <summary><span><span class="lights" aria-hidden="true"><i style="background:var(--pink)"></i><i style="background:var(--gold)"></i><i style="background:var(--mechanical)"></i></span>${esc(h.file)}:${h.start}–${h.end}</span>
+      <a href="${blob(h.file, h.start, h.end)}">Open on GitHub ↗</a></summary>
     ${h.note ? `<div class="note">${md(h.note)}</div>` : ""}<div class="code"><table>${rows}</table></div></details>`;
 }
+function wrapBody() {
+  const qs = TOUR.questions.map((q) => `<div class="boss ${q.blocking ? "blocking" : "side"}">
+    <span class="who">${q.blocking ? "Blocks merge" : "Side quest"}${q.who ? ` · ask ${esc(q.who)}` : ""}</span><span>${md(q.text)}</span></div>`).join("");
+  return `${qs ? `<section><span class="lab">♛ Final boss: questions only a person can answer</span>${qs}</section>` : ""}
+    <section><span class="lab">! Escaped mutants</span>${TOUR.gaps?.length
+      ? `<ul class="escaped">${TOUR.gaps.map((g) => `<li><i class="ico">!</i><span>${md(g)}</span></li>`).join("")}</ul>`
+      : `<p class="method">None. Every mutation was caught.</p>`}</section>
+    <section><span class="lab">✓ How this tour was checked</span><p class="method">${md(TOUR.method)}</p></section>`;
+}
+function stepBody(s) {
+  const ev = (s.evidence || []).map((e) => `<li class="${e.kind}"><span class="k"><i class="ico">${EV[e.kind][0]}</i>${EV[e.kind][1]}</span><span>${md(e.text)}</span></li>`).join("");
+  return `<div class="split">
+      <div>
+        ${s.look?.length ? `<section><span class="lab">✎ What to look at</span><ul class="look">${s.look.map((x) => `<li><span>${md(x)}</span></li>`).join("")}</ul></section>` : ""}
+        ${s.questions?.length ? `<section><span class="lab">? Ask yourself</span><ul class="think">${s.questions.map((q) => `<li>${md(q)}</li>`).join("")}</ul></section>` : ""}
+      </div>
+      ${ev ? `<div><section><span class="lab">✦ Receipts</span><ul class="ev">${ev}</ul></section></div>` : ""}
+    </div>
+    ${s.hunks?.length ? `<section>${s.hunks.map((h) => hunkHtml(h, s.tier)).join("")}</section>` : ""}`;
+}
 function renderStep() {
-  const s = steps[cur];
-  let body;
-  if (s.id === "wrap") {
-    body = `<section><h3>Questions only you can answer</h3><ul class="qs">${TOUR.questions.map((q) =>
-      `<li class="${q.blocking ? "blocking" : ""}">${q.blocking ? "<b>Blocks merge.</b> " : ""}${md(q.text)}<span class="who">${esc(q.who || "")}</span></li>`).join("")}</ul></section>
-      <section><h3>Test gaps found</h3>${list(TOUR.gaps)}</section>
-      <section><h3>How this tour was checked</h3><p class="prose" style="margin:0">${md(TOUR.method)}</p></section>`;
-  } else {
-    body = `<section><h3>Why it changed</h3><p class="prose" style="margin:0">${md(s.why)}</p></section>
-      ${s.look?.length ? `<section><h3>What to look at</h3>${list(s.look)}</section>` : ""}
-      ${s.evidence?.length ? `<section><h3>Evidence</h3><ul class="ev">${s.evidence.map((e) => `<li><span class="tag ${e.kind}">${EV[e.kind]}</span><span>${md(e.text)}</span></li>`).join("")}</ul></section>` : ""}
-      ${s.questions?.length ? `<section><h3>Ask yourself</h3><ul class="qs">${s.questions.map((q) => `<li>${md(q)}</li>`).join("")}</ul></section>` : ""}
-      ${s.hunks?.length ? `<section><h3>Code</h3>${s.hunks.map((h) => hunkHtml(h, s.tier)).join("")}</section>` : ""}`;
-  }
-  const files = (s.files || []).map((f) => `<a href="${blob(f.path)}">${esc(f.path)} <span class="n">+${f.add} −${f.del}</span></a>`).join("");
-  document.getElementById("panel").innerHTML = `
-    <div class="stephead"><div class="row"><span class="chip ${s.tier}">${TIER[s.tier]}</span><span>Step ${cur + 1} of ${steps.length}</span></div>
+  const s = steps[cur], t = TIER[s.tier], wrap = s.id === "wrap";
+  const say = wrap
+    ? (blocking.length ? `Route clear! Only ${plural(blocking.length, "question stands", "questions stand")} between you and the merge button.` : "Route clear! Nothing blocks the merge.")
+    : s.say || t.say;
+  const why = wrap ? "Here is everything a person still has to answer, and every gap my mutants found." : s.why;
+  const files = (s.files || []).map((f) => `<a href="${blob(f.path)}">${esc(f.path)} <span class="plus">+${f.add}</span> <span class="minus">−${f.del}</span></a>`).join("");
+  document.getElementById("stage").innerHTML = `
+    <div class="sh"><div class="row"><span class="tagpill t-${s.tier}">${t.tag}</span>Chapter ${cur + 1} of ${steps.length} · <span class="stars">${t.stars}</span> ${t.label}</div>
       <h2>${md(s.title)}</h2>${files ? `<div class="files">${files}</div>` : ""}</div>
-    ${body}
+    <div class="scene">${cat(moodOf(s))}
+      <div class="dialog"><span class="name">Mochi</span><p class="say">${md(say)}</p><p class="why">${md(why)}</p><span class="more" aria-hidden="true">▼</span></div></div>
+    ${wrap ? wrapBody() : stepBody(s)}
     <div class="nav"><span class="keys"><kbd>j</kbd> <kbd>k</kbd> move · <kbd>x</kbd> mark reviewed</span>
-      <div class="btns"><button class="b" id="prev" ${cur === 0 ? "disabled" : ""}>Previous</button>
-      <button class="b" id="mark">${done.has(s.id) ? "Unmark" : "Mark reviewed"}</button>
-      <button class="b primary" id="next" ${cur === steps.length - 1 ? "disabled" : ""}>Next</button></div></div>`;
+      <div class="btns"><button class="choice" id="prev" ${cur === 0 ? "disabled" : ""}>◂ Back</button>
+      <button class="choice" id="mark">${done.has(s.id) ? "♥ Unmark" : "♡ Mark reviewed"}</button>
+      <button class="choice go" id="next" ${cur === steps.length - 1 ? "disabled" : ""}>Reviewed, next ▸</button></div></div>`;
   renderRail();
+  renderRoute();
 }
 function go(i) {
   cur = Math.max(0, Math.min(steps.length - 1, i));

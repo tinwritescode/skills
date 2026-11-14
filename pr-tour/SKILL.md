@@ -36,6 +36,7 @@ For each `risky` and `logic` step:
 - **Run** the specs that cover it.
 - **Mutate**: break the core line of the change (put back the old key, drop a check, widen a trust rule), rerun, then `git checkout -- .`. A red test means the mutant was caught. A green run means it survived: that is a test gap and goes in `gaps`.
 - Copy the author's proof (curl matrix, review) as `claimed`. Never upgrade it to `ran`.
+- Record each mutation once, as `killed` or `survived` under the step whose code it breaks. The page counts them for the verdict.
 
 Run only the spec files the change touches. Done when every risky step has at least one `ran` or `killed` item, or its "why" says plainly that it is unproven. The worktree must also be clean (`git status --short` empty).
 
@@ -51,12 +52,12 @@ Write `<work>/tour.json` in this shape:
 generatedAt, pr{repo,number,url,title,author,base,branch,head,files,additions,deletions},
 verdict{tone: ok|warn|block, label, summary},
 spec{ticket,ticketUrl,asked[],extra[],missing[]},
-steps[{id,tier,title,why,look[],evidence[{kind: ran|killed|survived|claimed|read, text}],
+steps[{id,tier,title,say?,why,look[],evidence[{kind: ran|killed|survived|claimed|read, text}],
        questions[],files[{path,add,del}],hunks[{file,start,end,note?,open?}]}],
 questions[{blocking,who,text}], gaps[], method
 ```
 
-`hunks` take new-file line numbers at head, and `build.py` cuts those lines from the diff. Text fields support `` `code` `` only. Keep `why` to 2–4 sentences, written for someone who hasn't seen the code.
+`hunks` take new-file line numbers at head, and `build.py` cuts those lines from the diff. Text fields support `` `code` `` only. Keep `why` to 2–4 sentences, written for someone who hasn't seen the code. The page is narrated by Mochi, a cat whose face follows the step's evidence. `say` is her one-line opener for the step, cheerful but factual (what to fear, what got proven); leave it out and a stock line for the tier is used.
 
 ```
 python3 <this skill's folder>/build.py <work>/tour.json <work>/pr.diff <work>/pr-<n>-tour.html

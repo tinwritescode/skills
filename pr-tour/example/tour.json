@@ -37,6 +37,7 @@
       "id": "refund-check",
       "tier": "risky",
       "title": "Refund total is checked inside a row lock",
+      "say": "Boss fight! This is where the money moves. Two of my mutants got caught, but one escaped...",
       "why": "Before, each refund was compared only with the captured amount, so three refunds of 60 on a 100 payment all passed. Now the service sums earlier refunds (skipping failed ones) and checks the total. The payment row is locked `FOR UPDATE` for the whole transaction, so a second refund waits instead of reading a stale sum.",
       "look": [
         "The sum skips `failed` refunds. Pending ones count, which is the safe side.",
@@ -64,6 +65,7 @@
       "id": "index",
       "tier": "logic",
       "title": "Partial index for the refund sum",
+      "say": "Just an index. But I only have the author's word that it ran fine. Hmm...",
       "why": "Every refund now sums the earlier refunds for its payment. The index keeps that a lookup, and `CONCURRENTLY` builds it without locking the table.",
       "look": [
         "`CREATE INDEX CONCURRENTLY` can't run inside a transaction. Check that the migration runner allows that."
@@ -82,13 +84,13 @@
       "id": "tests",
       "tier": "logic",
       "title": "Three new refund tests",
+      "say": "These tests are the receipts! I broke the fix on purpose and they caught it.",
       "why": "These are the PR's proof: a partial refund past the total, two parallel refunds, and failed refunds left out of the sum.",
       "look": [
         "The parallel test runs against a real Postgres in CI, so the lock is real."
       ],
       "evidence": [
-        {"kind": "ran", "text": "All three pass on head."},
-        {"kind": "killed", "text": "Two of the mutations in step 1 turn these tests red."}
+        {"kind": "ran", "text": "All three pass on head, and two of them are the ones that caught the step 1 mutants."}
       ],
       "files": [
         {"path": "src/refunds/refund.service.spec.ts", "add": 24, "del": 0}
@@ -101,6 +103,7 @@
       "id": "error-rename",
       "tier": "mechanical",
       "title": "Error class and code renamed",
+      "say": "A rename. Safe to skip, unless some client still matches the old code.",
       "why": "`RefundTooLargeError` becomes `RefundExceedsCaptureError` and carries the captured and refunded totals.",
       "look": [
         "API clients that match on `refund_too_large` will stop matching."
