@@ -5,6 +5,7 @@ Agent skills I use with Claude Code. Each folder is one skill: a `SKILL.md` plus
 | Skill | What it does |
 |---|---|
 | [pr-tour](#pr-tour) | Turns a PR into a guided review page. Changes are ordered by risk, and each claim is tied to evidence the agent produced itself: tests it ran, mutations it made, code it read. |
+| [rust-best-practices](#rust-best-practices) | Opinionated Rust rules for the smallest code that still scales. Loads by itself when Claude touches `.rs` or `Cargo.toml` files. |
 
 ## pr-tour
 
@@ -42,9 +43,21 @@ In Claude Code, run `/pr-tour <PR link>`. Steps: [`pr-tour/SKILL.md`](pr-tour/SK
 
 It needs `gh` (logged in), `git` and Python 3. It runs the project's own tests, so the repo's dependencies must install locally.
 
+## rust-best-practices
+
+Rust rules I want an agent to follow. They are opinionated: they follow no company's style guide, and aim at the smallest code that still scales. Bad states can't be built, input is parsed once at the boundary, errors are typed, and a trait, crate, or layer is added only when the code needs it now.
+
+- [`SKILL.md`](rust-best-practices/SKILL.md): 26 rules with short IDs (`T2`, `E1`) to cite in reviews, each marked as caught by a lint or by review, and a checkable "done".
+- [`references/patterns.md`](rust-best-practices/references/patterns.md): bad and good code for each review rule.
+- [`references/lints.md`](rust-best-practices/references/lints.md): a short `[lints]` table and `clippy.toml` that enforce the lint rules.
+- [`references/library.md`](rust-best-practices/references/library.md): extra rules for crates other people depend on.
+
+The skill has `paths: ["**/*.rs", "**/Cargo.toml"]`, so Claude loads it only while working with Rust files.
+
 ## Install
 
 ```sh
 git clone https://github.com/tinwritescode/skills.git ~/Coding/side/skills
 ln -s ~/Coding/side/skills/pr-tour ~/.claude/skills/pr-tour
+ln -s ~/Coding/side/skills/rust-best-practices ~/.claude/skills/rust-best-practices
 ```
