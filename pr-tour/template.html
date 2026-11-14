@@ -1,0 +1,248 @@
+<title>PR tour</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: verdict card on top, then a two-column tour (step rail + one step at a time), stacking on phones. */
+:root {
+  --bg: #f4f6f8; --surface: #ffffff; --ink: #14181d; --muted: #59626e; --line: #dbe0e6;
+  --accent: #0b6b63; --accent-soft: #e2f1ef;
+  --risky: #b23a12; --risky-soft: #fbe9e2; --logic: #8a5a00; --logic-soft: #f8efd9;
+  --mech: #3f6b34; --mech-soft: #e6f0e1;
+  --add-bg: #e7f6ea; --add-ink: #1d5c2b; --del-bg: #fbe8e8; --del-ink: #8a2121;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1114; --surface: #161a1f; --ink: #e5e9ee; --muted: #9ba4b0; --line: #283039;
+  --accent: #52c3b6; --accent-soft: #12302d;
+  --risky: #ff8a65; --risky-soft: #3a1d14; --logic: #f0c060; --logic-soft: #33280f;
+  --mech: #9bcf8a; --mech-soft: #1c2d18;
+  --add-bg: #13301c; --add-ink: #a6e3b4; --del-bg: #3a1818; --del-ink: #f3b0b0; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e1114; --surface: #161a1f; --ink: #e5e9ee; --muted: #9ba4b0; --line: #283039;
+  --accent: #52c3b6; --accent-soft: #12302d;
+  --risky: #ff8a65; --risky-soft: #3a1d14; --logic: #f0c060; --logic-soft: #33280f;
+  --mech: #9bcf8a; --mech-soft: #1c2d18;
+  --add-bg: #13301c; --add-ink: #a6e3b4; --del-bg: #3a1818; --del-ink: #f3b0b0; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--sans); }
+.wrap { max-width: 1200px; margin: 0 auto; padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 24px; }
+a { color: var(--accent) }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+code, .mono { font-family: var(--mono); font-size: .9em }
+h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.25 }
+h1 { font-size: clamp(22px, 3vw, 30px); font-weight: 600 }
+h2 { font-size: 20px; font-weight: 600 }
+h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted) }
+ul { margin: 0; padding-left: 20px; display: grid; gap: 6px }
+.eyebrow { font: 500 12px var(--mono); color: var(--muted); letter-spacing: .02em }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--muted); font-size: 13px }
+
+.head { display: grid; gap: 10px }
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px;
+  display: grid; gap: 16px; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) }
+.verdict > * { min-width: 0 }
+.stamp { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; padding: 4px 10px;
+  border-radius: 6px; width: fit-content }
+.stamp.ok { background: var(--mech-soft); color: var(--mech) }
+.stamp.warn { background: var(--logic-soft); color: var(--logic) }
+.stamp.block { background: var(--risky-soft); color: var(--risky) }
+.spec { display: grid; gap: 10px; font-size: 14px }
+.spec dl { margin: 0; display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 6px 12px }
+.spec dt { font: 500 12px var(--mono); color: var(--muted); padding-top: 2px }
+.spec dd { margin: 0 }
+.spec dd ul { padding-left: 16px; gap: 2px }
+
+.budget { display: grid; gap: 8px }
+.bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--line) }
+.bar span { display: block }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums }
+.legend b { color: var(--ink); font-weight: 600 }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px }
+
+.tour { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 20px; align-items: start }
+.rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); display: grid; gap: 4px }
+.rail-head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px 6px; font-size: 13px; color: var(--muted) }
+.stepbtn { all: unset; cursor: pointer; display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; align-items: start;
+  padding: 9px 10px; border-radius: 8px; font-size: 14px; line-height: 1.35 }
+.stepbtn:hover { background: var(--surface) }
+.stepbtn[aria-current="step"] { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line) }
+.stepbtn:focus-visible { outline: 2px solid var(--accent) }
+.stepbtn .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid currentColor; margin-top: 1px; display: grid; place-items: center; font-size: 11px; font-weight: 700 }
+.stepbtn.done .dot { background: currentColor }
+.stepbtn.done .dot::after { content: "✓"; color: var(--surface) }
+.stepbtn.done .t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line) }
+.tier-risky { color: var(--risky) } .tier-logic { color: var(--logic) } .tier-mechanical { color: var(--mech) } .tier-wrap { color: var(--accent) }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 24px; display: grid; gap: 22px; min-width: 0 }
+.panel > section { display: grid; gap: 10px; min-width: 0 }
+.chip { display: inline-block; font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; padding: 3px 8px; border-radius: 4px }
+.chip.risky { background: var(--risky-soft); color: var(--risky) }
+.chip.logic { background: var(--logic-soft); color: var(--logic) }
+.chip.mechanical { background: var(--mech-soft); color: var(--mech) }
+.chip.wrap { background: var(--accent-soft); color: var(--accent) }
+.stephead { display: grid; gap: 8px }
+.stephead .row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; font-size: 13px; color: var(--muted) }
+.files { display: flex; flex-wrap: wrap; gap: 6px }
+.files a { font: 12px var(--mono); text-decoration: none; padding: 2px 8px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); overflow-wrap: anywhere }
+.files a:hover { border-color: var(--accent) }
+.files .n { color: var(--muted) }
+.prose { max-width: 70ch }
+
+.ev { list-style: none; padding: 0; gap: 8px }
+.ev li { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 12px; align-items: baseline; font-size: 14px }
+.tag { font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: .04em; padding: 2px 6px; border-radius: 4px; text-align: center }
+.tag.ran, .tag.killed { background: var(--mech-soft); color: var(--mech) }
+.tag.survived { background: var(--risky-soft); color: var(--risky) }
+.tag.claimed { background: var(--logic-soft); color: var(--logic) }
+.tag.read { background: var(--accent-soft); color: var(--accent) }
+.qs { list-style: none; padding: 0; gap: 8px }
+.qs li { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px }
+.qs li.blocking { border-color: var(--risky) }
+.qs .who { font: 500 12px var(--mono); color: var(--muted); display: block; margin-top: 4px }
+
+.hunk { border: 1px solid var(--line); border-radius: 8px; overflow: hidden }
+.hunk summary { cursor: pointer; padding: 8px 12px; font: 12px var(--mono); display: flex; justify-content: space-between; gap: 12px; background: var(--bg) }
+.hunk summary span { overflow-wrap: anywhere }
+.hunk .note { padding: 8px 12px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line) }
+.code { overflow-x: auto; font: 12.5px/1.5 var(--mono); border-top: 1px solid var(--line) }
+.code table { border-collapse: collapse; min-width: 100% }
+.code td { padding: 0 10px; white-space: pre; vertical-align: top }
+.code td.ln { color: var(--muted); text-align: right; user-select: none; width: 1%; font-variant-numeric: tabular-nums }
+.code tr.add { background: var(--add-bg) } .code tr.add td.c { color: var(--add-ink) }
+.code tr.del { background: var(--del-bg) } .code tr.del td.c { color: var(--del-ink) }
+
+.nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 18px }
+.nav .keys { font-size: 12px; color: var(--muted) }
+.nav .keys kbd { font: 11px var(--mono); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px }
+.btns { display: flex; gap: 8px; flex-wrap: wrap }
+button.b { font: 500 14px var(--sans); padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer }
+button.b.primary { background: var(--accent); border-color: var(--accent); color: var(--surface) }
+button.b:disabled { opacity: .4; cursor: default }
+
+@media (max-width: 860px) {
+  .verdict { grid-template-columns: minmax(0, 1fr) }
+  .tour { grid-template-columns: minmax(0, 1fr) }
+  .rail { position: static }
+  .panel { padding: 18px }
+  .ev li { grid-template-columns: minmax(0, 1fr); gap: 4px }
+  .tag { justify-self: start }
+}
+@media (prefers-reduced-motion: no-preference) { .stepbtn, button.b { transition: background .15s } }
+</style>
+
+<div class="wrap">
+  <header class="head" id="head"></header>
+  <section class="verdict" id="verdict" aria-label="Verdict"></section>
+  <section class="budget" id="budget" aria-label="Reading budget"></section>
+  <div class="tour">
+    <nav class="rail" id="rail" aria-label="Tour steps"></nav>
+    <article class="panel" id="panel" aria-live="polite"></article>
+  </div>
+</div>
+
+<script>
+const TOUR = /*TOUR_DATA*/null;
+const TIER = { risky: "Read closely", logic: "Skim", mechanical: "Safe to skip", wrap: "Wrap-up" };
+const EV = { ran: "Ran", killed: "Mutant caught", survived: "Mutant survived", claimed: "Author claims", read: "Read" };
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+// Inline markup in tour text: `code` only.
+const md = (s) => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>");
+const pr = TOUR.pr;
+const blob = (path, a, b) => `https://github.com/${pr.repo}/blob/${pr.head}/${path}` + (a ? `#L${a}` + (b && b !== a ? `-L${b}` : "") : "");
+const steps = [...TOUR.steps, { id: "wrap", tier: "wrap", title: "Questions and verdict" }];
+const storeKey = `pr-tour:${pr.repo}#${pr.number}@${pr.head}`;
+let done = new Set();
+try { done = new Set(JSON.parse(localStorage.getItem(storeKey) || "[]")); } catch {}
+const save = () => { try { localStorage.setItem(storeKey, JSON.stringify([...done])); } catch {} };
+
+document.getElementById("head").innerHTML = `
+  <div class="eyebrow">PR tour · ${esc(pr.repo)} <a href="${esc(pr.url)}">#${pr.number}</a></div>
+  <h1>${md(pr.title)}</h1>
+  <div class="meta"><span>${esc(pr.author)}</span><span class="mono">${esc(pr.base)} ← ${esc(pr.branch)}</span>
+    <span class="mono">head ${esc(pr.head.slice(0, 8))}</span><span>${pr.files} files · +${pr.additions} −${pr.deletions}</span>
+    <span>toured ${esc(TOUR.generatedAt)}</span></div>`;
+
+const v = TOUR.verdict, sp = TOUR.spec;
+const list = (xs) => xs?.length ? `<ul>${xs.map((x) => `<li>${md(x)}</li>`).join("")}</ul>` : `<span style="color:var(--muted)">None</span>`;
+document.getElementById("verdict").innerHTML = `
+  <div style="display:grid;gap:12px;align-content:start">
+    <span class="stamp ${esc(v.tone)}">${esc(v.label)}</span>
+    <p class="prose" style="margin:0">${md(v.summary)}</p>
+  </div>
+  <div class="spec"><h3>Against <a href="${esc(sp.ticketUrl)}">${esc(sp.ticket)}</a></h3>
+    <dl><dt>asked</dt><dd>${list(sp.asked)}</dd><dt>extra</dt><dd>${list(sp.extra)}</dd><dt>missing</dt><dd>${list(sp.missing)}</dd></dl></div>`;
+
+const bud = { risky: 0, logic: 0, mechanical: 0 };
+TOUR.steps.forEach((s) => (s.files || []).forEach((f) => (bud[s.tier] += f.add + f.del)));
+const total = bud.risky + bud.logic + bud.mechanical;
+document.getElementById("budget").innerHTML = `
+  <div class="bar" role="img" aria-label="Changed lines by how closely to read them">${["risky", "logic", "mechanical"].map((t) =>
+    `<span style="width:${(100 * bud[t]) / total}%;background:var(--${t === "mechanical" ? "mech" : t})"></span>`).join("")}</div>
+  <div class="legend">${["risky", "logic", "mechanical"].map((t) =>
+    `<span><i class="sw" style="background:var(--${t === "mechanical" ? "mech" : t})"></i>${TIER[t]} <b>${bud[t]}</b> lines</span>`).join("")}
+    <span>of ${total} changed</span></div>`;
+
+let cur = 0;
+function renderRail() {
+  document.getElementById("rail").innerHTML = `<div class="rail-head"><span>${steps.length} steps</span><span>${done.size}/${steps.length} reviewed</span></div>` +
+    steps.map((s, i) => `<button class="stepbtn tier-${s.tier} ${done.has(s.id) ? "done" : ""}" data-i="${i}" ${i === cur ? 'aria-current="step"' : ""}>
+      <span class="dot"></span><span class="t" style="color:var(--ink)">${md(s.title)}</span></button>`).join("");
+}
+function hunkHtml(h, tier) {
+  const rows = h.lines.map((l) => `<tr class="${l.k === "+" ? "add" : l.k === "-" ? "del" : ""}"><td class="ln">${l.n ?? ""}</td><td class="c">${esc(l.k === " " ? " " : l.k)}${esc(l.t)}</td></tr>`).join("");
+  return `<details class="hunk" ${tier === "risky" || h.open ? "open" : ""}><summary><span>${esc(h.file)}:${h.start}–${h.end}</span><a href="${blob(h.file, h.start, h.end)}">GitHub ↗</a></summary>
+    ${h.note ? `<div class="note">${md(h.note)}</div>` : ""}<div class="code"><table>${rows}</table></div></details>`;
+}
+function renderStep() {
+  const s = steps[cur];
+  let body;
+  if (s.id === "wrap") {
+    body = `<section><h3>Questions only you can answer</h3><ul class="qs">${TOUR.questions.map((q) =>
+      `<li class="${q.blocking ? "blocking" : ""}">${q.blocking ? "<b>Blocks merge.</b> " : ""}${md(q.text)}<span class="who">${esc(q.who || "")}</span></li>`).join("")}</ul></section>
+      <section><h3>Test gaps found</h3>${list(TOUR.gaps)}</section>
+      <section><h3>How this tour was checked</h3><p class="prose" style="margin:0">${md(TOUR.method)}</p></section>`;
+  } else {
+    body = `<section><h3>Why it changed</h3><p class="prose" style="margin:0">${md(s.why)}</p></section>
+      ${s.look?.length ? `<section><h3>What to look at</h3>${list(s.look)}</section>` : ""}
+      ${s.evidence?.length ? `<section><h3>Evidence</h3><ul class="ev">${s.evidence.map((e) => `<li><span class="tag ${e.kind}">${EV[e.kind]}</span><span>${md(e.text)}</span></li>`).join("")}</ul></section>` : ""}
+      ${s.questions?.length ? `<section><h3>Ask yourself</h3><ul class="qs">${s.questions.map((q) => `<li>${md(q)}</li>`).join("")}</ul></section>` : ""}
+      ${s.hunks?.length ? `<section><h3>Code</h3>${s.hunks.map((h) => hunkHtml(h, s.tier)).join("")}</section>` : ""}`;
+  }
+  const files = (s.files || []).map((f) => `<a href="${blob(f.path)}">${esc(f.path)} <span class="n">+${f.add} −${f.del}</span></a>`).join("");
+  document.getElementById("panel").innerHTML = `
+    <div class="stephead"><div class="row"><span class="chip ${s.tier}">${TIER[s.tier]}</span><span>Step ${cur + 1} of ${steps.length}</span></div>
+      <h2>${md(s.title)}</h2>${files ? `<div class="files">${files}</div>` : ""}</div>
+    ${body}
+    <div class="nav"><span class="keys"><kbd>j</kbd> <kbd>k</kbd> move · <kbd>x</kbd> mark reviewed</span>
+      <div class="btns"><button class="b" id="prev" ${cur === 0 ? "disabled" : ""}>Previous</button>
+      <button class="b" id="mark">${done.has(s.id) ? "Unmark" : "Mark reviewed"}</button>
+      <button class="b primary" id="next" ${cur === steps.length - 1 ? "disabled" : ""}>Next</button></div></div>`;
+  renderRail();
+}
+function go(i) {
+  cur = Math.max(0, Math.min(steps.length - 1, i));
+  if (location.hash.slice(1) !== steps[cur].id) history.replaceState(null, "", "#" + steps[cur].id);
+  renderStep();
+}
+function toggle() { const id = steps[cur].id; done.has(id) ? done.delete(id) : done.add(id); save(); renderStep(); }
+const fromHash = () => Math.max(0, steps.findIndex((s) => s.id === location.hash.slice(1)));
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-i]"); if (b) return go(+b.dataset.i);
+  if (e.target.id === "prev") go(cur - 1);
+  if (e.target.id === "next") { done.add(steps[cur].id); save(); go(cur + 1); }
+  if (e.target.id === "mark") toggle();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey || /input|textarea/i.test(e.target.tagName)) return;
+  if (e.key === "j" || e.key === "ArrowRight") go(cur + 1);
+  if (e.key === "k" || e.key === "ArrowLeft") go(cur - 1);
+  if (e.key === "x") toggle();
+});
+addEventListener("hashchange", () => go(fromHash()));
+go(fromHash());
+</script>
