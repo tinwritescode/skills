@@ -1,0 +1,94 @@
+diff --git a/src/refunds/refund.service.ts b/src/refunds/refund.service.ts
+index 3a1f0c2..8d4e7b1 100644
+--- a/src/refunds/refund.service.ts
++++ b/src/refunds/refund.service.ts
+@@ -18,21 +18,33 @@ export class RefundService {
+   async refund(paymentId: string, amount: number): Promise<Refund> {
+-    const payment = await this.payments.findOneOrFail(paymentId);
+-    if (amount > payment.capturedAmount) {
+-      throw new RefundTooLargeError(paymentId);
+-    }
+-    const refund = await this.refunds.insert({ paymentId, amount });
+-    await this.gateway.refund(payment.gatewayId, amount);
+-    return refund;
++    return this.db.transaction(async (tx) => {
++      // Lock the payment row so two refunds can't both pass the check.
++      const payment = await tx.payments.findOneOrFail(paymentId, {
++        lock: 'FOR UPDATE',
++      });
++      const alreadyRefunded = await tx.refunds.sum('amount', {
++        paymentId,
++        status: Not('failed'),
++      });
++      if (alreadyRefunded + amount > payment.capturedAmount) {
++        throw new RefundExceedsCaptureError(paymentId, {
++          captured: payment.capturedAmount,
++          refunded: alreadyRefunded,
++        });
++      }
++      const refund = await tx.refunds.insert({ paymentId, amount });
++      await this.gateway.refund(payment.gatewayId, amount, {
++        idempotencyKey: refund.id,
++      });
++      return refund;
++    });
+   }
+ }
+diff --git a/src/refunds/refund.errors.ts b/src/refunds/refund.errors.ts
+index 77c0e1a..b2d9f40 100644
+--- a/src/refunds/refund.errors.ts
++++ b/src/refunds/refund.errors.ts
+@@ -1,7 +1,10 @@
+-export class RefundTooLargeError extends DomainError {
+-  constructor(paymentId: string) {
+-    super('refund_too_large', `Refund exceeds capture for ${paymentId}`);
++export class RefundExceedsCaptureError extends DomainError {
++  constructor(
++    paymentId: string,
++    detail: { captured: number; refunded: number },
++  ) {
++    super('refund_exceeds_capture', `Refund exceeds capture for ${paymentId}`, detail);
+   }
+ }
+diff --git a/migrations/20261110_refunds_payment_id_idx.sql b/migrations/20261110_refunds_payment_id_idx.sql
+new file mode 100644
+index 0000000..5c3e9a2
+--- /dev/null
++++ b/migrations/20261110_refunds_payment_id_idx.sql
+@@ -0,0 +1,3 @@
++-- The refund check sums refunds per payment on every request.
++CREATE INDEX CONCURRENTLY IF NOT EXISTS refunds_payment_id_idx
++  ON refunds (payment_id) WHERE status <> 'failed';
+diff --git a/src/refunds/refund.service.spec.ts b/src/refunds/refund.service.spec.ts
+index 91ab2c0..e40f7d3 100644
+--- a/src/refunds/refund.service.spec.ts
++++ b/src/refunds/refund.service.spec.ts
+@@ -40,6 +40,30 @@ describe('RefundService', () => {
+     await expect(service.refund(payment.id, 101)).rejects.toThrow();
+   });
+
++  it('rejects a partial refund that would pass the captured total', async () => {
++    await service.refund(payment.id, 60);
++    await expect(service.refund(payment.id, 50)).rejects.toThrow(
++      RefundExceedsCaptureError,
++    );
++  });
++
++  it('lets only one of two parallel refunds through', async () => {
++    const results = await Promise.allSettled([
++      service.refund(payment.id, 80),
++      service.refund(payment.id, 80),
++    ]);
++    expect(results.filter((r) => r.status === 'fulfilled')).toHaveLength(1);
++  });
++
++  it('ignores failed refunds when summing', async () => {
++    await refunds.insert({ paymentId: payment.id, amount: 90, status: 'failed' });
++    await expect(service.refund(payment.id, 100)).resolves.toMatchObject({
++      amount: 100,
++    });
++  });
++
+   it('calls the gateway with the payment gateway id', async () => {
+     await service.refund(payment.id, 10);
+     expect(gateway.refund).toHaveBeenCalledWith('gw_1', 10, expect.anything());

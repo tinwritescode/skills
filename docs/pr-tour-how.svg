@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" width="960" height="420" role="img" aria-label="How pr-tour works: gather, map, prove, question, build; then how a mutation check and the evidence tags work">
+  <style>
+    .bg { fill: #f4f6f8 } .card { fill: #ffffff; stroke: #dbe0e6 } .ink { fill: #14181d } .muted { fill: #59626e }
+    .accent { fill: #0b6b63 } .accent-stroke { stroke: #0b6b63 } .line { stroke: #9aa3ae }
+    .risky { fill: #b23a12 } .risky-soft { fill: #fbe9e2 } .mech { fill: #3f6b34 } .mech-soft { fill: #e6f0e1 }
+    .logic { fill: #8a5a00 } .logic-soft { fill: #f8efd9 } .acc-soft { fill: #e2f1ef } .on-accent { fill: #ffffff }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace }
+    .t { font-size: 15px; font-weight: 600 } .d { font-size: 12.5px } .h { font-size: 12px; font-weight: 600; letter-spacing: .08em }
+    .tag { font-size: 10.5px; font-weight: 700; letter-spacing: .03em }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0e1114 } .card { fill: #161a1f; stroke: #283039 } .ink { fill: #e5e9ee } .muted { fill: #9ba4b0 }
+      .accent { fill: #52c3b6 } .accent-stroke { stroke: #52c3b6 } .line { stroke: #5d6772 }
+      .risky { fill: #ff8a65 } .risky-soft { fill: #3a1d14 } .mech { fill: #9bcf8a } .mech-soft { fill: #1c2d18 }
+      .logic { fill: #f0c060 } .logic-soft { fill: #33280f } .acc-soft { fill: #12302d } .on-accent { fill: #0e1114 }
+    }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="muted"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="420" rx="12"/>
+
+  <!-- Pipeline -->
+  <g>
+    <rect class="card" x="20" y="24" width="168" height="160" rx="10"/>
+    <circle class="accent" cx="44" cy="50" r="12"/><text class="on-accent mono" x="44" y="54.5" font-size="12" font-weight="700" text-anchor="middle">1</text>
+    <text class="ink t" x="64" y="55">Gather</text>
+    <text class="muted d" x="34" y="88"><tspan x="34">PR diff and metadata</tspan><tspan x="34" dy="19">The linked ticket,</tspan><tspan x="34" dy="19">used as the spec</tspan><tspan x="34" dy="19">Checkout of the exact</tspan><tspan x="34" dy="19">head in a worktree</tspan></text>
+  </g>
+  <g>
+    <rect class="card" x="208" y="24" width="168" height="160" rx="10"/>
+    <circle class="accent" cx="232" cy="50" r="12"/><text class="on-accent mono" x="232" y="54.5" font-size="12" font-weight="700" text-anchor="middle">2</text>
+    <text class="ink t" x="252" y="55">Map</text>
+    <text class="muted d" x="222" y="88"><tspan x="222">Group hunks by intent,</tspan><tspan x="222" dy="19">not by file</tspan></text>
+    <rect class="risky-soft" x="222" y="122" width="96" height="16" rx="3"/><text class="risky mono tag" x="228" y="134">READ CLOSELY</text>
+    <rect class="logic-soft" x="222" y="142" width="44" height="16" rx="3"/><text class="logic mono tag" x="228" y="154">SKIM</text>
+    <rect class="mech-soft" x="222" y="162" width="96" height="16" rx="3"/><text class="mech mono tag" x="228" y="174">SAFE TO SKIP</text>
+  </g>
+  <g>
+    <rect class="card accent-stroke" x="396" y="24" width="168" height="160" rx="10" stroke-width="2"/>
+    <circle class="accent" cx="420" cy="50" r="12"/><text class="on-accent mono" x="420" y="54.5" font-size="12" font-weight="700" text-anchor="middle">3</text>
+    <text class="ink t" x="440" y="55">Prove</text>
+    <text class="muted d" x="410" y="88"><tspan x="410">Run the specs that</tspan><tspan x="410" dy="19">cover each change</tspan><tspan x="410" dy="19">Break the fix, rerun</tspan><tspan x="410" dy="19">Read callers and config</tspan><tspan x="410" dy="19">PR body = claim only</tspan></text>
+  </g>
+  <g>
+    <rect class="card" x="584" y="24" width="168" height="160" rx="10"/>
+    <circle class="accent" cx="608" cy="50" r="12"/><text class="on-accent mono" x="608" y="54.5" font-size="12" font-weight="700" text-anchor="middle">4</text>
+    <text class="ink t" x="628" y="55">Question</text>
+    <text class="muted d" x="598" y="88"><tspan x="598">What the code can't</tspan><tspan x="598" dy="19">answer, and who can</tspan><tspan x="598" dy="19">Mark the ones that</tspan><tspan x="598" dy="19">block the merge</tspan><tspan x="598" dy="19">Ticket vs code diff</tspan></text>
+  </g>
+  <g>
+    <rect class="card" x="772" y="24" width="168" height="160" rx="10"/>
+    <circle class="accent" cx="796" cy="50" r="12"/><text class="on-accent mono" x="796" y="54.5" font-size="12" font-weight="700" text-anchor="middle">5</text>
+    <text class="ink t" x="816" y="55">Build</text>
+    <text class="muted d" x="786" y="88"><tspan x="786" class="mono" font-size="11.5">tour.json + pr.diff</tspan><tspan x="786" dy="19">→ </tspan><tspan class="mono" font-size="11.5">build.py</tspan><tspan x="786" dy="19">One page: verdict,</tspan><tspan x="786" dy="19">steps by risk, code</tspan><tspan x="786" dy="19">cut from the real diff</tspan></text>
+  </g>
+  <g class="line" stroke-width="1.5" marker-end="url(#arrow)">
+    <line x1="189" y1="104" x2="206" y2="104"/><line x1="377" y1="104" x2="394" y2="104"/>
+    <line x1="565" y1="104" x2="582" y2="104"/><line x1="753" y1="104" x2="770" y2="104"/>
+  </g>
+
+  <!-- Mutation check -->
+  <rect class="card" x="20" y="208" width="500" height="192" rx="10"/>
+  <text class="muted h" x="40" y="236">HOW A MUTATION CHECK WORKS</text>
+  <rect class="acc-soft" x="40" y="282" width="138" height="50" rx="8"/>
+  <text class="ink d" x="109" y="302" text-anchor="middle"><tspan x="109">Break one line</tspan><tspan x="109" dy="17">of the fix</tspan></text>
+  <rect class="acc-soft" x="200" y="282" width="108" height="50" rx="8"/>
+  <text class="ink d" x="254" y="302" text-anchor="middle"><tspan x="254">Rerun the</tspan><tspan x="254" dy="17">specs</tspan></text>
+  <rect class="mech-soft" x="332" y="258" width="172" height="44" rx="8"/>
+  <text class="mech d" x="344" y="276" font-weight="600">A test goes red</text>
+  <text class="muted d" x="344" y="293">The fix is guarded</text>
+  <rect class="risky-soft" x="332" y="312" width="172" height="44" rx="8"/>
+  <text class="risky d" x="344" y="330" font-weight="600">Everything stays green</text>
+  <text class="muted d" x="344" y="347">A test gap, listed at the end</text>
+  <g class="line" stroke-width="1.5" fill="none" marker-end="url(#arrow)">
+    <line x1="179" y1="307" x2="198" y2="307"/>
+    <path d="M309 307 C 320 307, 318 280, 330 280"/>
+    <path d="M309 307 C 320 307, 318 334, 330 334"/>
+  </g>
+  <text class="muted d" x="40" y="384">Then the change is reverted, so the checkout ends clean.</text>
+
+  <!-- Evidence tags -->
+  <rect class="card" x="540" y="208" width="400" height="192" rx="10"/>
+  <text class="muted h" x="560" y="236">EVIDENCE TAGS ON EACH STEP</text>
+  <rect class="mech-soft" x="560" y="254" width="116" height="20" rx="4"/><text class="mech mono tag" x="618" y="268" text-anchor="middle">RAN</text>
+  <text class="ink d" x="690" y="268">Tests run on the PR head</text>
+  <rect class="mech-soft" x="560" y="282" width="116" height="20" rx="4"/><text class="mech mono tag" x="618" y="296" text-anchor="middle">MUTANT CAUGHT</text>
+  <text class="ink d" x="690" y="296">A test noticed the broken fix</text>
+  <rect class="risky-soft" x="560" y="310" width="116" height="20" rx="4"/><text class="risky mono tag" x="618" y="324" text-anchor="middle">MUTANT SURVIVED</text>
+  <text class="ink d" x="690" y="324">No test noticed: a gap</text>
+  <rect class="logic-soft" x="560" y="338" width="116" height="20" rx="4"/><text class="logic mono tag" x="618" y="352" text-anchor="middle">AUTHOR CLAIMS</text>
+  <text class="ink d" x="690" y="352">From the PR body, not rerun</text>
+  <rect class="acc-soft" x="560" y="366" width="116" height="20" rx="4"/><text class="accent mono tag" x="618" y="380" text-anchor="middle">READ</text>
+  <text class="ink d" x="690" y="380">Code the agent checked by hand</text>
+</svg>

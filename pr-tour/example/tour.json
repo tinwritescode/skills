@@ -1,0 +1,127 @@
+{
+  "generatedAt": "2026-11-10 (sample)",
+  "pr": {
+    "repo": "example/shop-api",
+    "number": 42,
+    "url": "https://github.com/example/shop-api/pull/42",
+    "title": "Cap refunds at the captured amount",
+    "author": "sample-author",
+    "base": "main",
+    "branch": "fix/refund-cap",
+    "head": "4f1c9e07b2d84a6f9c3e1d2b7a5f0e8c6d9b3a21",
+    "files": 4,
+    "additions": 56,
+    "deletions": 11
+  },
+  "verdict": {
+    "tone": "warn",
+    "label": "Merge after one answer",
+    "summary": "Refunds are now capped at what was captured, counting earlier partial refunds, and the check runs inside a row lock so two parallel refunds can't both pass. Tests prove both. One open question: whether anything else writes refunds without going through this service."
+  },
+  "spec": {
+    "ticket": "SHOP-118",
+    "ticketUrl": "https://github.com/example/shop-api/issues/118",
+    "asked": [
+      "Sum of refunds never exceeds the captured amount: done (step 1)",
+      "Two refunds at the same moment can't both succeed: done (step 1)"
+    ],
+    "extra": [
+      "Gateway calls now send an idempotency key (step 1)",
+      "New partial index on `refunds.payment_id` (step 2)",
+      "Error code renamed to `refund_exceeds_capture` (step 4)"
+    ],
+    "missing": []
+  },
+  "steps": [
+    {
+      "id": "refund-check",
+      "tier": "risky",
+      "title": "Refund total is checked inside a row lock",
+      "why": "Before, each refund was compared only with the captured amount, so three refunds of 60 on a 100 payment all passed. Now the service sums earlier refunds (skipping failed ones) and checks the total. The payment row is locked `FOR UPDATE` for the whole transaction, so a second refund waits instead of reading a stale sum.",
+      "look": [
+        "The sum skips `failed` refunds. Pending ones count, which is the safe side.",
+        "The gateway call happens inside the transaction. If it is slow, the row lock is held that long.",
+        "`idempotencyKey: refund.id` means a retried request can't refund twice at the gateway."
+      ],
+      "evidence": [
+        {"kind": "ran", "text": "`refund.service.spec.ts`: 9 tests pass on head, including the new partial and parallel cases."},
+        {"kind": "killed", "text": "Removed `lock: 'FOR UPDATE'`: \"lets only one of two parallel refunds through\" went red."},
+        {"kind": "killed", "text": "Dropped `alreadyRefunded` from the check: \"rejects a partial refund that would pass the captured total\" went red."},
+        {"kind": "survived", "text": "Removed the `idempotencyKey`: every test still passes. Nothing checks it."},
+        {"kind": "read", "text": "`RefundController` and the `refund.requested` queue worker both call `RefundService.refund`. No other code inserts into `refunds`."}
+      ],
+      "questions": [
+        "Does the support dashboard or a script write refunds straight to the database? Those would skip this check."
+      ],
+      "files": [
+        {"path": "src/refunds/refund.service.ts", "add": 23, "del": 7}
+      ],
+      "hunks": [
+        {"file": "src/refunds/refund.service.ts", "start": 18, "end": 42, "note": "The lock, the sum, and the check all happen in one transaction."}
+      ]
+    },
+    {
+      "id": "index",
+      "tier": "logic",
+      "title": "Partial index for the refund sum",
+      "why": "Every refund now sums the earlier refunds for its payment. The index keeps that a lookup, and `CONCURRENTLY` builds it without locking the table.",
+      "look": [
+        "`CREATE INDEX CONCURRENTLY` can't run inside a transaction. Check that the migration runner allows that."
+      ],
+      "evidence": [
+        {"kind": "claimed", "text": "The PR body says the migration ran on a staging copy in 4 s."}
+      ],
+      "files": [
+        {"path": "migrations/20261110_refunds_payment_id_idx.sql", "add": 3, "del": 0}
+      ],
+      "hunks": [
+        {"file": "migrations/20261110_refunds_payment_id_idx.sql", "start": 1, "end": 3, "open": true}
+      ]
+    },
+    {
+      "id": "tests",
+      "tier": "logic",
+      "title": "Three new refund tests",
+      "why": "These are the PR's proof: a partial refund past the total, two parallel refunds, and failed refunds left out of the sum.",
+      "look": [
+        "The parallel test runs against a real Postgres in CI, so the lock is real."
+      ],
+      "evidence": [
+        {"kind": "ran", "text": "All three pass on head."},
+        {"kind": "killed", "text": "Two of the mutations in step 1 turn these tests red."}
+      ],
+      "files": [
+        {"path": "src/refunds/refund.service.spec.ts", "add": 24, "del": 0}
+      ],
+      "hunks": [
+        {"file": "src/refunds/refund.service.spec.ts", "start": 43, "end": 64, "open": true}
+      ]
+    },
+    {
+      "id": "error-rename",
+      "tier": "mechanical",
+      "title": "Error class and code renamed",
+      "why": "`RefundTooLargeError` becomes `RefundExceedsCaptureError` and carries the captured and refunded totals.",
+      "look": [
+        "API clients that match on `refund_too_large` will stop matching."
+      ],
+      "evidence": [
+        {"kind": "read", "text": "No other code in the repo uses the old name or code."}
+      ],
+      "files": [
+        {"path": "src/refunds/refund.errors.ts", "add": 7, "del": 4}
+      ],
+      "hunks": [
+        {"file": "src/refunds/refund.errors.ts", "start": 1, "end": 8}
+      ]
+    }
+  ],
+  "questions": [
+    {"blocking": true, "who": "Support tooling owner", "text": "Does anything write to `refunds` without going through `RefundService`? A direct insert skips the cap."},
+    {"blocking": false, "who": "API owner", "text": "Do any clients match on the old `refund_too_large` code?"}
+  ],
+  "gaps": [
+    "No test fails if the gateway idempotency key is removed."
+  ],
+  "method": "Sample data for the README. In a real run, tests and mutations run on the PR head in a separate worktree, and code excerpts are cut from the PR diff by `build.py`."
+}

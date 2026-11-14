@@ -28,7 +28,7 @@
 
 * { box-sizing: border-box }
 body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--sans); }
-.wrap { max-width: 1200px; margin: 0 auto; padding-block: 28px 64px;
+.page { max-width: 1200px; margin: 0 auto; padding-block: 28px 64px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   display: grid; gap: 24px; }
 a { color: var(--accent) }
@@ -135,7 +135,7 @@ button.b:disabled { opacity: .4; cursor: default }
 @media (prefers-reduced-motion: no-preference) { .stepbtn, button.b { transition: background .15s } }
 </style>
 
-<div class="wrap">
+<div class="page">
   <header class="head" id="head"></header>
   <section class="verdict" id="verdict" aria-label="Verdict"></section>
   <section class="budget" id="budget" aria-label="Reading budget"></section>
