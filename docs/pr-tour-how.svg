@@ -1,97 +1,148 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" width="960" height="420" role="img" aria-label="How pr-tour works: gather, map, prove, question, build; then how a mutation check and the evidence tags work">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 800" width="960" height="533" role="img" aria-label="How pr-tour works: gather, map, prove, question, build. Prove breaks the fix on purpose and reruns the specs: a red test means the mutant was caught, all green means it escaped and there is a test gap. Every claim carries one of five evidence tags.">
   <style>
-    .bg { fill: #f4f6f8 } .card { fill: #ffffff; stroke: #dbe0e6 } .ink { fill: #14181d } .muted { fill: #59626e }
-    .accent { fill: #0b6b63 } .accent-stroke { stroke: #0b6b63 } .line { stroke: #9aa3ae }
-    .risky { fill: #b23a12 } .risky-soft { fill: #fbe9e2 } .mech { fill: #3f6b34 } .mech-soft { fill: #e6f0e1 }
-    .logic { fill: #8a5a00 } .logic-soft { fill: #f8efd9 } .acc-soft { fill: #e2f1ef } .on-accent { fill: #ffffff }
-    text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace }
-    .t { font-size: 15px; font-weight: 600 } .d { font-size: 12.5px } .h { font-size: 12px; font-weight: 600; letter-spacing: .08em }
-    .tag { font-size: 10.5px; font-weight: 700; letter-spacing: .03em }
+    .s1 { stop-color: #FFE8F1 } .s2 { stop-color: #EAE6FF } .dot { fill: #FFFFFF; fill-opacity: .95 }
+    .card { fill: #FFFFFF } .frame { stroke: #F5BED6 } .shadow { fill: #F3D3E3 }
+    .ink { fill: #3A2E4D } .ink-2 { fill: #6B5E86 } .ink-3 { fill: #A79BC0 } .ink-s { stroke: #3A2E4D }
+    .pink { fill: #FF5D99 } .pink-s { stroke: #FF5D99 } .pink-deep { fill: #D93F7B } .pink-shadow { fill: #FFC7DC } .on-pink { fill: #FFFFFF }
+    .lilac { fill: #9C86F2 } .gold { fill: #E8A400 } .soft-s { stroke: #D7A8C9 }
+    .proof { fill: #14806F } .proof-soft { fill: #D8F5EC } .gap { fill: #CF4A22 } .gap-s { stroke: #CF4A22 } .gap-soft { fill: #FFE3D6 }
+    .read-soft { fill: #FFF6FA } .read-s { stroke: #F0E2EE } .on-dot { fill: #FFFFFF }
+    .fur { fill: #FFFDF8 } .fur-s { stroke: #FFFDF8 } .cat-line { stroke: #3A2E4D } .cat-pink { fill: #FFB3CF } .patch { fill: #F7B267 }
+    text { font-family: "M PLUS Rounded 1c", ui-rounded, "SF Pro Rounded", "Hiragino Maru Gothic ProN", "Arial Rounded MT Bold", system-ui, sans-serif }
+    .pop { font-family: "Mochiy Pop One", ui-rounded, "SF Pro Rounded", "Hiragino Maru Gothic ProN", "Arial Rounded MT Bold", system-ui, sans-serif; font-weight: 800 }
+    .b { font-weight: 800 } .m { font-weight: 500 }
     @media (prefers-color-scheme: dark) {
-      .bg { fill: #0e1114 } .card { fill: #161a1f; stroke: #283039 } .ink { fill: #e5e9ee } .muted { fill: #9ba4b0 }
-      .accent { fill: #52c3b6 } .accent-stroke { stroke: #52c3b6 } .line { stroke: #5d6772 }
-      .risky { fill: #ff8a65 } .risky-soft { fill: #3a1d14 } .mech { fill: #9bcf8a } .mech-soft { fill: #1c2d18 }
-      .logic { fill: #f0c060 } .logic-soft { fill: #33280f } .acc-soft { fill: #12302d } .on-accent { fill: #0e1114 }
+      .s1 { stop-color: #1A1430 } .s2 { stop-color: #2B1E47 } .dot { fill-opacity: .16 }
+      .card { fill: #241B3A } .frame { stroke: #6B4C8F } .shadow { fill: #3A2A57 }
+      .ink { fill: #F6F0FF } .ink-2 { fill: #C9BCE6 } .ink-3 { fill: #8B7DB0 } .ink-s { stroke: #C9BCE6 }
+      .pink { fill: #FF7FB0 } .pink-s { stroke: #FF7FB0 } .pink-deep { fill: #B8467A } .pink-shadow { fill: #5A2E52 } .on-pink { fill: #1A1430 }
+      .lilac { fill: #A895FF } .gold { fill: #FFD36B } .soft-s { stroke: #7A5C9E }
+      .proof { fill: #6EE0C6 } .proof-soft { fill: #173A36 } .gap { fill: #FF9E7D } .gap-s { stroke: #FF9E7D } .gap-soft { fill: #45261F }
+      .read-soft { fill: #2B2145 } .read-s { stroke: #3A2E58 } .on-dot { fill: #1A1430 }
+      .fur { fill: #FFF4E6 } .fur-s { stroke: #FFF4E6 } .cat-line { stroke: #2A1F40 } .cat-pink { fill: #FF9DC2 } .patch { fill: #F0A458 }
     }
   </style>
   <defs>
-    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0 0 L10 5 L0 10 z" class="muted"/>
-    </marker>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop offset="0" class="s1"/><stop offset="1" class="s2"/></linearGradient>
+    <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="1.6" class="dot"/></pattern>
+    <marker id="soft-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#D7A8C9"/></marker>
+    <marker id="ink-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#8B7DB0"/></marker>
+    <marker id="pink-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#FF5D99"/></marker>
+    <clipPath id="head"><ellipse cx="100" cy="98" rx="76" ry="62"/></clipPath>
   </defs>
-  <rect class="bg" width="960" height="420" rx="12"/>
+
+  <rect width="1440" height="800" rx="24" fill="url(#sky)"/>
+  <rect width="1440" height="800" rx="24" fill="url(#dots)"/>
+
+  <text class="pop pink" x="64" y="100" font-size="40">How pr-tour works</text>
+  <text class="m ink-2" x="64" y="146" font-size="18">From a PR link to one review page, where every claim says how it was proven.</text>
+
+  <!-- Mochi and her line -->
+  <rect class="card frame" x="972" y="62" width="246" height="72" rx="20" stroke-width="2.5"/>
+  <path class="card" d="M1214 86 L1232 98 L1214 110 Z"/>
+  <path class="frame" d="M1217 88 L1232 98 L1217 108" fill="none" stroke-width="2.5" stroke-linejoin="round"/>
+  <text class="b ink" font-size="14.5"><tspan x="990" y="93">I break the fix on purpose,</tspan><tspan x="990" y="116">so you don't have to guess!</tspan></text>
+  <g transform="translate(1232 26) scale(.76)" stroke-linecap="round" stroke-linejoin="round">
+    <path class="cat-line" d="M150 170 C192 166 194 120 170 110" fill="none" stroke-width="15"/>
+    <path class="fur-s" d="M150 170 C192 166 194 120 170 110" fill="none" stroke-width="7"/>
+    <ellipse class="fur cat-line" cx="100" cy="166" rx="56" ry="30" stroke-width="4"/>
+    <ellipse class="fur cat-line" cx="80" cy="190" rx="13" ry="9" stroke-width="3.5"/>
+    <ellipse class="fur cat-line" cx="120" cy="190" rx="13" ry="9" stroke-width="3.5"/>
+    <path class="fur cat-line" d="M40 72 L34 18 Q36 13 41 16 L84 46 Z M160 72 L166 18 Q164 13 159 16 L116 46 Z" stroke-width="4"/>
+    <path class="cat-pink" d="M47 60 L43 30 L70 48 Z M153 60 L157 30 L130 48 Z"/>
+    <ellipse class="fur" cx="100" cy="98" rx="76" ry="62"/>
+    <path class="patch" d="M108 28 C150 24 186 58 176 96 C150 86 122 72 108 28 Z" clip-path="url(#head)"/>
+    <ellipse class="cat-line" cx="100" cy="98" rx="76" ry="62" fill="none" stroke-width="4"/>
+    <path class="pink cat-line" d="M52 40 L34 29 L36 53 Z M52 40 L70 29 L68 53 Z" stroke-width="3"/>
+    <circle class="pink cat-line" cx="52" cy="41" r="6" stroke-width="3"/>
+    <ellipse class="cat-pink" cx="60" cy="118" rx="12" ry="7" opacity=".85"/>
+    <ellipse class="cat-pink" cx="140" cy="118" rx="12" ry="7" opacity=".85"/>
+    <path class="cat-line" d="M24 104 L44 108 M24 116 L44 114 M176 104 L156 108 M176 116 L156 114" stroke-width="3"/>
+    <path class="cat-pink cat-line" d="M95 106 L105 106 L100 112 Z" stroke-width="2.5"/>
+    <path class="cat-line" d="M62 98 Q72 85 82 98 M118 98 Q128 85 138 98" fill="none" stroke-width="5"/>
+    <path class="cat-line" d="M86 116 Q93 126 100 116 Q107 126 114 116" fill="none" stroke-width="3.5"/>
+    <path class="gold cat-line" d="M182 26 L185 36 L195 39 L185 42 L182 52 L179 42 L169 39 L179 36 Z" stroke-width="2.5"/>
+  </g>
 
   <!-- Pipeline -->
-  <g>
-    <rect class="card" x="20" y="24" width="168" height="160" rx="10"/>
-    <circle class="accent" cx="44" cy="50" r="12"/><text class="on-accent mono" x="44" y="54.5" font-size="12" font-weight="700" text-anchor="middle">1</text>
-    <text class="ink t" x="64" y="55">Gather</text>
-    <text class="muted d" x="34" y="88"><tspan x="34">PR diff and metadata</tspan><tspan x="34" dy="19">The linked ticket,</tspan><tspan x="34" dy="19">used as the spec</tspan><tspan x="34" dy="19">Checkout of the exact</tspan><tspan x="34" dy="19">head in a worktree</tspan></text>
+  <g fill="none" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 8">
+    <path class="soft-s" d="M282 284 L330 284" marker-end="url(#soft-head)"/>
+    <path class="soft-s" d="M558 284 L606 284" marker-end="url(#soft-head)"/>
+    <path class="soft-s" d="M834 284 L882 284" marker-end="url(#soft-head)"/>
+    <path class="soft-s" d="M1110 284 L1158 284" marker-end="url(#soft-head)"/>
   </g>
   <g>
-    <rect class="card" x="208" y="24" width="168" height="160" rx="10"/>
-    <circle class="accent" cx="232" cy="50" r="12"/><text class="on-accent mono" x="232" y="54.5" font-size="12" font-weight="700" text-anchor="middle">2</text>
-    <text class="ink t" x="252" y="55">Map</text>
-    <text class="muted d" x="222" y="88"><tspan x="222">Group hunks by intent,</tspan><tspan x="222" dy="19">not by file</tspan></text>
-    <rect class="risky-soft" x="222" y="122" width="96" height="16" rx="3"/><text class="risky mono tag" x="228" y="134">READ CLOSELY</text>
-    <rect class="logic-soft" x="222" y="142" width="44" height="16" rx="3"/><text class="logic mono tag" x="228" y="154">SKIM</text>
-    <rect class="mech-soft" x="222" y="162" width="96" height="16" rx="3"/><text class="mech mono tag" x="228" y="174">SAFE TO SKIP</text>
+    <rect class="shadow" x="64" y="206" width="208" height="168" rx="22"/>
+    <rect class="card frame" x="64" y="200" width="208" height="168" rx="22" stroke-width="2.5"/>
+    <rect class="lilac" x="84" y="218" width="30" height="30" rx="10"/><text class="pop" x="99" y="238" font-size="13" text-anchor="middle" fill="#fff">01</text>
+    <text class="pop ink" x="84" y="278" font-size="19">Gather</text>
+    <text class="ink-2" font-size="14"><tspan x="84" y="306">The diff, the ticket</tspan><tspan x="84" dy="20">as the spec, and a</tspan><tspan x="84" dy="20">checkout of the head.</tspan></text>
   </g>
   <g>
-    <rect class="card accent-stroke" x="396" y="24" width="168" height="160" rx="10" stroke-width="2"/>
-    <circle class="accent" cx="420" cy="50" r="12"/><text class="on-accent mono" x="420" y="54.5" font-size="12" font-weight="700" text-anchor="middle">3</text>
-    <text class="ink t" x="440" y="55">Prove</text>
-    <text class="muted d" x="410" y="88"><tspan x="410">Run the specs that</tspan><tspan x="410" dy="19">cover each change</tspan><tspan x="410" dy="19">Break the fix, rerun</tspan><tspan x="410" dy="19">Read callers and config</tspan><tspan x="410" dy="19">PR body = claim only</tspan></text>
+    <rect class="shadow" x="340" y="206" width="208" height="168" rx="22"/>
+    <rect class="card frame" x="340" y="200" width="208" height="168" rx="22" stroke-width="2.5"/>
+    <rect class="lilac" x="360" y="218" width="30" height="30" rx="10"/><text class="pop" x="375" y="238" font-size="13" text-anchor="middle" fill="#fff">02</text>
+    <text class="pop ink" x="360" y="278" font-size="19">Map</text>
+    <text class="ink-2" font-size="14"><tspan x="360" y="306">Sort hunks into</tspan><tspan x="360" dy="20">chapters, rated from</tspan><tspan x="360" dy="20"><tspan class="gold">★★★</tspan> boss to <tspan class="gold">★</tspan> easy.</tspan></text>
   </g>
   <g>
-    <rect class="card" x="584" y="24" width="168" height="160" rx="10"/>
-    <circle class="accent" cx="608" cy="50" r="12"/><text class="on-accent mono" x="608" y="54.5" font-size="12" font-weight="700" text-anchor="middle">4</text>
-    <text class="ink t" x="628" y="55">Question</text>
-    <text class="muted d" x="598" y="88"><tspan x="598">What the code can't</tspan><tspan x="598" dy="19">answer, and who can</tspan><tspan x="598" dy="19">Mark the ones that</tspan><tspan x="598" dy="19">block the merge</tspan><tspan x="598" dy="19">Ticket vs code diff</tspan></text>
+    <rect class="pink-deep" x="616" y="206" width="208" height="168" rx="22"/>
+    <rect class="pink" x="616" y="200" width="208" height="168" rx="22"/>
+    <rect class="on-pink" x="636" y="218" width="30" height="30" rx="10"/><text class="pop pink" x="651" y="238" font-size="13" text-anchor="middle">03</text>
+    <text class="pop on-pink" x="636" y="278" font-size="19">Prove</text>
+    <text class="m on-pink" font-size="14"><tspan x="636" y="306">Run the specs. Break</tspan><tspan x="636" dy="20">the fix on purpose.</tspan><tspan x="636" dy="20">Read the callers.</tspan></text>
   </g>
   <g>
-    <rect class="card" x="772" y="24" width="168" height="160" rx="10"/>
-    <circle class="accent" cx="796" cy="50" r="12"/><text class="on-accent mono" x="796" y="54.5" font-size="12" font-weight="700" text-anchor="middle">5</text>
-    <text class="ink t" x="816" y="55">Build</text>
-    <text class="muted d" x="786" y="88"><tspan x="786" class="mono" font-size="11.5">tour.json + pr.diff</tspan><tspan x="786" dy="19">→ </tspan><tspan class="mono" font-size="11.5">build.py</tspan><tspan x="786" dy="19">One page: verdict,</tspan><tspan x="786" dy="19">steps by risk, code</tspan><tspan x="786" dy="19">cut from the real diff</tspan></text>
+    <rect class="shadow" x="892" y="206" width="208" height="168" rx="22"/>
+    <rect class="card frame" x="892" y="200" width="208" height="168" rx="22" stroke-width="2.5"/>
+    <rect class="lilac" x="912" y="218" width="30" height="30" rx="10"/><text class="pop" x="927" y="238" font-size="13" text-anchor="middle" fill="#fff">04</text>
+    <text class="pop ink" x="912" y="278" font-size="19">Question</text>
+    <text class="ink-2" font-size="14"><tspan x="912" y="306">What the code can't</tspan><tspan x="912" dy="20">answer, who can, and</tspan><tspan x="912" dy="20">what blocks the merge.</tspan></text>
   </g>
-  <g class="line" stroke-width="1.5" marker-end="url(#arrow)">
-    <line x1="189" y1="104" x2="206" y2="104"/><line x1="377" y1="104" x2="394" y2="104"/>
-    <line x1="565" y1="104" x2="582" y2="104"/><line x1="753" y1="104" x2="770" y2="104"/>
+  <g>
+    <rect class="shadow" x="1168" y="206" width="208" height="168" rx="22"/>
+    <rect class="card frame" x="1168" y="200" width="208" height="168" rx="22" stroke-width="2.5"/>
+    <rect class="lilac" x="1188" y="218" width="30" height="30" rx="10"/><text class="pop" x="1203" y="238" font-size="13" text-anchor="middle" fill="#fff">05</text>
+    <text class="pop ink" x="1188" y="278" font-size="19">Build</text>
+    <text class="ink-2" font-size="14"><tspan x="1188" y="306">tour.json and the real</tspan><tspan x="1188" dy="20">diff become one page,</tspan><tspan x="1188" dy="20">narrated by Mochi.</tspan></text>
   </g>
 
   <!-- Mutation check -->
-  <rect class="card" x="20" y="208" width="500" height="192" rx="10"/>
-  <text class="muted h" x="40" y="236">HOW A MUTATION CHECK WORKS</text>
-  <rect class="acc-soft" x="40" y="282" width="138" height="50" rx="8"/>
-  <text class="ink d" x="109" y="302" text-anchor="middle"><tspan x="109">Break one line</tspan><tspan x="109" dy="17">of the fix</tspan></text>
-  <rect class="acc-soft" x="200" y="282" width="108" height="50" rx="8"/>
-  <text class="ink d" x="254" y="302" text-anchor="middle"><tspan x="254">Rerun the</tspan><tspan x="254" dy="17">specs</tspan></text>
-  <rect class="mech-soft" x="332" y="258" width="172" height="44" rx="8"/>
-  <text class="mech d" x="344" y="276" font-weight="600">A test goes red</text>
-  <text class="muted d" x="344" y="293">The fix is guarded</text>
-  <rect class="risky-soft" x="332" y="312" width="172" height="44" rx="8"/>
-  <text class="risky d" x="344" y="330" font-weight="600">Everything stays green</text>
-  <text class="muted d" x="344" y="347">A test gap, listed at the end</text>
-  <g class="line" stroke-width="1.5" fill="none" marker-end="url(#arrow)">
-    <line x1="179" y1="307" x2="198" y2="307"/>
-    <path d="M309 307 C 320 307, 318 280, 330 280"/>
-    <path d="M309 307 C 320 307, 318 334, 330 334"/>
+  <path class="pink-s" d="M720 380 L720 454" fill="none" stroke-width="3" stroke-linecap="round" marker-end="url(#pink-head)"/>
+  <g fill="none" stroke="#8B7DB0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M830 512 L882 512" marker-end="url(#ink-head)"/>
+    <path d="M1106 512 L1134 512 M1134 456 L1134 576"/>
+    <path d="M1134 456 L1158 456" marker-end="url(#ink-head)"/>
+    <path d="M1134 576 L1158 576" marker-end="url(#ink-head)"/>
   </g>
-  <text class="muted d" x="40" y="384">Then the change is reverted, so the checkout ends clean.</text>
+  <rect class="pink-shadow" x="616" y="469" width="208" height="96" rx="20"/>
+  <rect class="card pink-s" x="616" y="464" width="208" height="96" rx="20" stroke-width="2.5"/>
+  <text class="ink" font-size="15" text-anchor="middle"><tspan class="b" x="720" y="507">Break one line</tspan><tspan x="720" dy="22">of the fix</tspan></text>
+  <rect class="pink-shadow" x="892" y="469" width="208" height="96" rx="20"/>
+  <rect class="card pink-s" x="892" y="464" width="208" height="96" rx="20" stroke-width="2.5"/>
+  <text class="ink" font-size="15" text-anchor="middle"><tspan class="b" x="996" y="507">Rerun the specs</tspan><tspan x="996" dy="22">that cover it</tspan></text>
+  <text class="b ink-3" x="996" y="596" font-size="13" text-anchor="middle">Then the fix is restored ✿</text>
+
+  <rect class="proof-soft" x="1168" y="412" width="208" height="88" rx="18"/>
+  <text font-size="14.5"><tspan class="b proof" x="1186" y="446">✦ A test goes red</tspan><tspan class="ink" x="1186" dy="22">Mutant caught! The fix</tspan><tspan class="ink" x="1186" dy="20">is guarded.</tspan></text>
+  <rect class="gap-soft gap-s" x="1168" y="532" width="208" height="88" rx="18" stroke-width="2"/>
+  <text font-size="14.5"><tspan class="b gap" x="1186" y="566">! All tests stay green</tspan><tspan class="ink" x="1186" dy="22">Mutant escaped.</tspan><tspan class="ink" x="1186" dy="20">That's a test gap.</tspan></text>
+  <text class="m ink-2" x="616" y="676" font-size="14">Chapter 03 in detail: green after breaking the fix means no test guards that line.</text>
 
   <!-- Evidence tags -->
-  <rect class="card" x="540" y="208" width="400" height="192" rx="10"/>
-  <text class="muted h" x="560" y="236">EVIDENCE TAGS ON EACH STEP</text>
-  <rect class="mech-soft" x="560" y="254" width="116" height="20" rx="4"/><text class="mech mono tag" x="618" y="268" text-anchor="middle">RAN</text>
-  <text class="ink d" x="690" y="268">Tests run on the PR head</text>
-  <rect class="mech-soft" x="560" y="282" width="116" height="20" rx="4"/><text class="mech mono tag" x="618" y="296" text-anchor="middle">MUTANT CAUGHT</text>
-  <text class="ink d" x="690" y="296">A test noticed the broken fix</text>
-  <rect class="risky-soft" x="560" y="310" width="116" height="20" rx="4"/><text class="risky mono tag" x="618" y="324" text-anchor="middle">MUTANT SURVIVED</text>
-  <text class="ink d" x="690" y="324">No test noticed: a gap</text>
-  <rect class="logic-soft" x="560" y="338" width="116" height="20" rx="4"/><text class="logic mono tag" x="618" y="352" text-anchor="middle">AUTHOR CLAIMS</text>
-  <text class="ink d" x="690" y="352">From the PR body, not rerun</text>
-  <rect class="acc-soft" x="560" y="366" width="116" height="20" rx="4"/><text class="accent mono tag" x="618" y="380" text-anchor="middle">READ</text>
-  <text class="ink d" x="690" y="380">Code the agent checked by hand</text>
+  <rect class="shadow" x="64" y="430" width="484" height="312" rx="22"/>
+  <rect class="card frame" x="64" y="424" width="484" height="312" rx="22" stroke-width="2.5"/>
+  <text class="pop ink" x="92" y="466" font-size="17">Tags on every claim</text>
+  <g font-size="13">
+    <rect class="proof-soft" x="92" y="490" width="200" height="30" rx="15"/><circle class="proof" cx="108" cy="505" r="11"/><text class="b on-dot" x="108" y="510" text-anchor="middle" font-size="12">✓</text>
+    <text class="b proof" x="126" y="510">Proven · ran</text><text class="ink" x="308" y="510" font-size="15">Tests run on the PR head</text>
+    <rect class="proof-soft" x="92" y="534" width="200" height="30" rx="15"/><circle class="proof" cx="108" cy="549" r="11"/><text class="b on-dot" x="108" y="554" text-anchor="middle" font-size="12">✦</text>
+    <text class="b proof" x="126" y="554">Mutant caught!</text><text class="ink" x="308" y="554" font-size="15">A test noticed the broken fix</text>
+    <rect class="gap-soft gap-s" x="92" y="578" width="200" height="30" rx="15" stroke-width="2"/><circle class="gap" cx="108" cy="593" r="11"/><text class="b on-dot" x="108" y="598" text-anchor="middle" font-size="12">!</text>
+    <text class="b gap" x="126" y="598">Mutant escaped!</text><text class="ink" x="308" y="598" font-size="15">No test noticed: a gap</text>
+    <rect class="gap-s" x="92" y="622" width="200" height="30" rx="15" fill="none" stroke-width="2" stroke-dasharray="5 4"/><circle class="gap" cx="108" cy="637" r="11"/><text class="b on-dot" x="108" y="642" text-anchor="middle" font-size="12">?</text>
+    <text class="b gap" x="126" y="642">Hearsay · not rerun</text><text class="ink" x="308" y="642" font-size="15">From the PR body only</text>
+    <rect class="read-soft read-s" x="92" y="666" width="200" height="30" rx="15" stroke-width="2"/><circle class="ink-3" cx="108" cy="681" r="11"/><text class="b on-dot" x="108" y="686" text-anchor="middle" font-size="12">◎</text>
+    <text class="b ink-2" x="126" y="686">Read by hand</text><text class="ink" x="308" y="686" font-size="15">Code the agent checked itself</text>
+  </g>
 </svg>
